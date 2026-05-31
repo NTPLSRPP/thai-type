@@ -1,8 +1,12 @@
 # thai-type
 
+**English** · [ไทย](./README.th.md)
+
 A Thai touch-typing trainer in the spirit of Monkeytype — structured lessons, multiple keyboard layouts, live stats, and a deep set of customization and theming options. Built for learning the Thai keyboard from the home row up.
 
 **▶ Live demo: <https://ntplsrpp.github.io/thai-type/>**
+
+![thai-type — test screen](docs/screenshots/home.png)
 
 > Everything runs client-side; progress and settings persist in the browser (no backend, no account).
 
@@ -15,6 +19,12 @@ A Thai touch-typing trainer in the spirit of Monkeytype — structured lessons, 
 - **On-screen keyboard** — full MacBook-style key field, shift legends, finger-zone coloring, next-key hint, and an error heatmap. Three sizes.
 - **Themes** — 14 built-in presets plus user-created themes (custom palette, caret, and uploaded background image stored in IndexedDB).
 - **Settings** — stop-on-error, no-backspace, blind mode, caret style, smooth caret, font + size, page width, sounds, and more — persisted to `localStorage` with schema-versioned migration.
+
+## Screens
+
+| Lessons | Themes |
+|---|---|
+| [![lessons](docs/screenshots/lessons.png)](docs/screenshots/lessons.png) | [![themes](docs/screenshots/theme-chisa.png)](docs/screenshots/theme-chisa.png) |
 
 ## Tech stack
 
