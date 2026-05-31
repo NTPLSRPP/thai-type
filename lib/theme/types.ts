@@ -2,7 +2,8 @@ export type CaretStyle = "line" | "block" | "underline";
 export type SoundId = "off" | "click";
 
 export interface ThemeBackground {
-  imageRef: string; // IndexedDB key
+  imageRef?: string; // IndexedDB key (user-uploaded image)
+  url?: string; // remote image URL (bundled preset wallpapers)
   blur: number; // px
   overlayOpacity: number; // 0..1, overlay uses --bg so text stays readable
 }

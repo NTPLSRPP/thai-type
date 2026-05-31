@@ -59,6 +59,44 @@ export const PRESETS: Theme[] = [
     "--bg": "#fbf7f0", "--text": "#b8ae9e", "--text-typed": "#3a3530",
     "--accent": "#e09f3e", "--error": "#9e2a2b", "--caret": "#e09f3e", "--font": SANS_TH,
   }, "underline"),
+
+  // ---- wallpaper themes (palette researched; image hotlinked, falls back to --bg gradient) ----
+  // Hatsune Miku — signature teal #39C5BB + magenta-pink accents on dark teal.
+  {
+    id: "hatsune-miku",
+    name: "Hatsune Miku",
+    builtin: true,
+    caretStyle: "line",
+    sound: "off",
+    background: { url: "https://w.wallhaven.cc/full/1p/wallhaven-1ppld1.jpg", blur: 3, overlayOpacity: 0.66 },
+    vars: {
+      "--bg": "#0c2024",
+      "--text": "#5d8a86",
+      "--text-typed": "#e9fffb",
+      "--accent": "#39c5bb",
+      "--error": "#ff5fa2",
+      "--caret": "#39c5bb",
+      "--font": MONO,
+    },
+  },
+  // Chisa (Wuthering Waves) — black + crimson red with white, JK-uniform palette.
+  {
+    id: "chisa",
+    name: "Chisa",
+    builtin: true,
+    caretStyle: "line",
+    sound: "off",
+    background: { url: "https://w.wallhaven.cc/full/3q/wallhaven-3q3wj3.jpg", blur: 3, overlayOpacity: 0.7 },
+    vars: {
+      "--bg": "#140a0c",
+      "--text": "#8a6f74",
+      "--text-typed": "#f4ebed",
+      "--accent": "#e23b4d",
+      "--error": "#ff7a7a",
+      "--caret": "#e23b4d",
+      "--font": SANS_TH,
+    },
+  },
 ];
 
 export function presetById(id: string): Theme | undefined {

@@ -23,23 +23,26 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme, activeId, customs]);
 
   useEffect(() => {
-    let url: string | null = null;
+    let objUrl: string | null = null;
     let cancelled = false;
-    const ref = theme?.background?.imageRef;
-    if (ref) {
-      getImage(ref).then((blob) => {
+    const bg = theme?.background;
+    if (bg?.url) {
+      // remote preset wallpaper — use directly, no object URL to manage
+      setBgUrl(bg.url);
+    } else if (bg?.imageRef) {
+      getImage(bg.imageRef).then((blob) => {
         if (cancelled || !blob || typeof URL.createObjectURL !== "function") return;
-        url = URL.createObjectURL(blob);
-        setBgUrl(url);
+        objUrl = URL.createObjectURL(blob);
+        setBgUrl(objUrl);
       });
     } else {
       setBgUrl(null);
     }
     return () => {
       cancelled = true;
-      if (url && typeof URL.revokeObjectURL === "function") URL.revokeObjectURL(url);
+      if (objUrl && typeof URL.revokeObjectURL === "function") URL.revokeObjectURL(objUrl);
     };
-  }, [theme?.background?.imageRef, activeId]);
+  }, [theme?.background?.url, theme?.background?.imageRef, activeId]);
 
   const bg = theme?.background;
   return (
