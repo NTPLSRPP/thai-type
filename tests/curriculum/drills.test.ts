@@ -40,6 +40,18 @@ describe("generateDrill", () => {
       }
     }
   });
+  it("hosts marks on a fallback base for an all-combining-mark unit (tone-marks lesson)", () => {
+    // KeyH=้ KeyJ=่ KeyY=ั — all combining marks, no base in the set
+    const out = generateDrill({ codes: ["KeyH", "KeyJ", "KeyY"], layout: kedmanee, groups: 30, rng: Math.random });
+    expect(out.length).toBeGreaterThan(0);
+    for (const chunk of out.split(" ")) {
+      const arr = Array.from(chunk);
+      expect(isCombiningThai(arr[0])).toBe(false); // never starts with a bare mark
+      for (let i = 1; i < arr.length; i++) {
+        if (isCombiningThai(arr[i])) expect(isCombiningThai(arr[i - 1])).toBe(false);
+      }
+    }
+  });
 });
 
 // simple deterministic rng for tests
