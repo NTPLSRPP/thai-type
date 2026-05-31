@@ -3,6 +3,8 @@ import { minimalDark } from "./minimalDark"
 
 const MONO = "'JetBrains Mono', ui-monospace, monospace"
 const SANS_TH = "'Noto Sans Thai', 'Sarabun', system-ui, sans-serif"
+// prefix bundled-asset URLs with the deploy base path (set for GitHub Pages)
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
 
 function t(
   id: string,
@@ -174,7 +176,7 @@ export const PRESETS: Theme[] = [
     caretStyle: "line",
     sound: "off",
     background: {
-      url: "/themes/chisa.jpg",
+      url: `${BASE}/themes/chisa.jpg`,
       blur: 1,
       overlayOpacity: 0.7,
     },

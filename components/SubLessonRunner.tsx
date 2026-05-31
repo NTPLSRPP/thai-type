@@ -43,6 +43,11 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
     setDone(false);
   }, [text]);
 
+  // hydrate persisted lesson progress on mount
+  useEffect(() => {
+    useLessonProgress.getState().reload();
+  }, []);
+
   useEffect(() => {
     setRepsDone(0);
     start();
