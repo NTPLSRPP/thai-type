@@ -1,9 +1,14 @@
-export interface ThemeVars { [k: `--${string}`]: string; }
-export interface Theme { id: string; name: string; vars: ThemeVars; }
+import type { Theme } from "./types";
+
+export type { Theme } from "./types";
 
 export const minimalDark: Theme = {
   id: "minimal-dark",
   name: "Minimal Dark",
+  builtin: true,
+  caretStyle: "line",
+  sound: "off",
+  background: null,
   vars: {
     "--bg": "#2c2e31",
     "--text": "#646669",
