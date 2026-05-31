@@ -41,7 +41,7 @@ export const kedmanee: Layout = {
     KeyJ: { normal: "่", shift: "๋", finger: "right-index", row: "home" },
     KeyK: { normal: "า", shift: "ษ", finger: "right-middle", row: "home" },
     KeyL: { normal: "ส", shift: "ศ", finger: "right-ring", row: "home" },
-    Semicolon: { normal: "ว", shift: "ซ", finger: "right-ring", row: "home" },
+    Semicolon: { normal: "ว", shift: "ซ", finger: "right-pinky", row: "home" },
     Quote: { normal: "ง", shift: ".", finger: "right-pinky", row: "home" },
 
     KeyZ: { normal: "ผ", shift: "(", finger: "left-pinky", row: "bottom" },
