@@ -3,18 +3,39 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useSettings } from "@/stores/settingsStore";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
 import { computeMetrics, type Metrics } from "@/lib/engine/metrics";
+import { errorCountsByChar } from "@/lib/engine/keyStats";
 import { resolveKey } from "@/lib/layouts/resolve";
-import { kedmanee } from "@/lib/layouts/kedmanee";
+import { getLayout } from "@/lib/layouts/registry";
 import { generateWords } from "@/lib/text/generate";
 import type { EngineSnapshot } from "@/lib/engine/types";
 import { Words } from "./Words";
 import { StatsBar } from "./StatsBar";
 import { Results } from "./Results";
 import { ModeBar } from "./ModeBar";
+import { LayoutBar } from "./LayoutBar";
+import { Keyboard } from "./Keyboard";
+
+const CONTROL_KEYS = new Set([
+  "Shift",
+  "Backspace",
+  "Enter",
+  "Tab",
+  "Alt",
+  "Control",
+  "Meta",
+  "CapsLock",
+  "Dead",
+  "Escape",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+]);
 
 export function TestScreen({ testText }: { testText?: string }) {
-  const { mode, duration, wordCount } = useSettings();
-  const [, setTarget] = useState(testText ?? "");
+  const { mode, duration, wordCount, layoutId, inputMode } = useSettings();
+  const layout = getLayout(layoutId);
+  const [target, setTarget] = useState(testText ?? "");
   const [snap, setSnap] = useState<EngineSnapshot | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -23,7 +44,7 @@ export function TestScreen({ testText }: { testText?: string }) {
 
   const newTarget = useCallback(() => {
     if (testText) return testText;
-    const count = mode === "words" ? wordCount : 60; // time mode: long buffer
+    const count = mode === "words" ? wordCount : 60;
     return generateWords(count);
   }, [testText, mode, wordCount]);
 
@@ -59,7 +80,6 @@ export function TestScreen({ testText }: { testText?: string }) {
     if (timerRef.current) clearInterval(timerRef.current);
   }, [mode, duration, testText]);
 
-  // time-mode countdown — starts on first keystroke
   useEffect(() => {
     if (mode !== "time" || testText || !snap || snap.finished) return;
     if (snap.startedAt === null) return;
@@ -82,10 +102,17 @@ export function TestScreen({ testText }: { testText?: string }) {
     function onKey(ev: KeyboardEvent) {
       const e = engineRef.current;
       if (!e || metrics) return;
-      const cluster = resolveKey(kedmanee, ev.code, ev.shiftKey);
-      if (cluster === null) return;
+      let char: string | null;
+      if (inputMode === "os-native") {
+        // OS already produced the Thai character; accept printable single graphemes only.
+        char = CONTROL_KEYS.has(ev.key) || ev.key.length === 0 ? null : ev.key;
+        if (char !== null && Array.from(char).length > 1) char = null;
+      } else {
+        char = resolveKey(layout, ev.code, ev.shiftKey);
+      }
+      if (char === null) return;
       ev.preventDefault();
-      e.press(cluster);
+      e.press(char);
       const s = e.snapshot();
       setSnap(s);
       if (s.finished) {
@@ -95,7 +122,7 @@ export function TestScreen({ testText }: { testText?: string }) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [metrics]);
+  }, [metrics, inputMode, layout]);
 
   const liveWpm = useMemo(() => {
     if (!snap || !snap.startedAt) return 0;
@@ -104,13 +131,39 @@ export function TestScreen({ testText }: { testText?: string }) {
   }, [snap]);
   const liveAcc = useMemo(() => (snap ? computeMetrics(snap.keystrokes, 1).accuracy : 0), [snap]);
 
-  if (metrics) return <Results metrics={metrics} onRestart={start} />;
+  const nextChar =
+    snap && !snap.finished && snap.cursor < snap.cells.length ? snap.cells[snap.cursor].target : null;
+  const errorCounts = useMemo(
+    () => (snap ? errorCountsByChar(snap.keystrokes) : new Map<string, number>()),
+    [snap],
+  );
+
+  if (metrics) {
+    return (
+      <div>
+        <Results metrics={metrics} onRestart={start} />
+        <Keyboard layout={layout} nextChar={null} errorCounts={errorCounts} />
+      </div>
+    );
+  }
 
   return (
     <div>
-      {!testText && <ModeBar />}
+      {!testText && (
+        <>
+          <LayoutBar />
+          <ModeBar />
+        </>
+      )}
       <StatsBar wpm={liveWpm} accuracy={liveAcc} timeLeft={timeLeft} />
-      <div style={{ marginTop: 24 }}>{snap && <Words cells={snap.cells} cursor={snap.cursor} />}</div>
+      <div style={{ marginTop: 24 }}>
+        {snap && <Words cells={snap.cells} cursor={snap.cursor} text={target} />}
+      </div>
+      <Keyboard
+        layout={layout}
+        nextChar={inputMode === "app-remap" ? nextChar : null}
+        errorCounts={errorCounts}
+      />
     </div>
   );
 }
