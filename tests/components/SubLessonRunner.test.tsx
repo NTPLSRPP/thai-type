@@ -5,12 +5,15 @@ vi.mock("@/lib/storage/imageStore", () => ({
   putImage: vi.fn(),
   deleteImage: vi.fn(),
 }));
+const pushMock = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: pushMock }) }));
 import { SubLessonRunner } from "@/components/SubLessonRunner";
 import { useLessonProgress } from "@/stores/lessonProgressStore";
 import { useSettings } from "@/stores/settingsStore";
 
 beforeEach(() => {
   localStorage.clear();
+  pushMock.mockClear();
   useLessonProgress.getState().reload();
   useSettings.getState().setInputMode("app-remap");
 });
@@ -40,5 +43,25 @@ describe("SubLessonRunner", () => {
   it("shows unknown lesson for a bad id", () => {
     render(<SubLessonRunner id={9999} />);
     expect(screen.getByText(/unknown lesson/i)).toBeInTheDocument();
+  });
+
+  it("on the complete screen, R redoes the lesson", () => {
+    render(<SubLessonRunner id={1} textOverride="ก" />);
+    pressKeyD();
+    pressKeyD();
+    pressKeyD(); // complete
+    expect(screen.getByText(/lesson complete/i)).toBeInTheDocument();
+    fireEvent.keyDown(window, { code: "KeyR" });
+    expect(screen.queryByText(/lesson complete/i)).toBeNull(); // back to typing
+    expect(screen.getByTestId("rep-indicator").textContent).toContain("1 / 3");
+  });
+
+  it("on the complete screen, Space navigates to the next lesson", () => {
+    render(<SubLessonRunner id={1} textOverride="ก" />);
+    pressKeyD();
+    pressKeyD();
+    pressKeyD(); // complete
+    fireEvent.keyDown(window, { code: "Space" });
+    expect(pushMock).toHaveBeenCalledWith("/lessons/2");
   });
 });

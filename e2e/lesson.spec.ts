@@ -21,8 +21,12 @@ test("open a chapter, run a sub-lesson, finish 3 reps to complete", async ({ pag
   await typeLine();
   await expect(page.getByText(/lesson complete/i)).toBeVisible();
 
-  // sub-lesson now shows complete on the map
-  await page.getByRole("link", { name: "all lessons" }).click();
+  // Space -> next lesson
+  await page.keyboard.press("Space");
+  await expect(page).toHaveURL(/\/lessons\/2$/);
+
+  // completed sub-lesson shows complete on the map
+  await page.goto("/lessons");
   await expect(page.getByTestId("sub-1")).toHaveAttribute("data-complete", "true");
 });
 

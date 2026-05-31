@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSettings } from "@/stores/settingsStore";
 import { useKeyModel } from "@/stores/keyModelStore";
 import { useLessonProgress } from "@/stores/lessonProgressStore";
@@ -20,6 +21,7 @@ interface SubLessonRunnerProps {
 }
 
 export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
+  const router = useRouter();
   const settings = useSettings();
   const layout = getLayout(settings.layoutId);
   const recordModel = useKeyModel((s) => s.record);
@@ -51,7 +53,23 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
   useEffect(() => {
     function onKey(ev: KeyboardEvent) {
       const e = engineRef.current;
-      if (!e || done) return;
+      // On the completion screen: Space = next lesson, R = redo this lesson.
+      if (done) {
+        if (ev.code === "Space") {
+          ev.preventDefault();
+          const nextId = nextSubLessonId(id);
+          if (nextId) router.push(`/lessons/${nextId}`);
+          return;
+        }
+        if (ev.code === "KeyR") {
+          ev.preventDefault();
+          setRepsDone(0);
+          start();
+          return;
+        }
+        return;
+      }
+      if (!e) return;
       if (ev.code === "Backspace" || ev.key === "Backspace") {
         ev.preventDefault();
         if (settings.noBackspace) return;
@@ -79,7 +97,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [
-    done, layout, id, recordModel, recordRep, start,
+    done, layout, id, router, recordModel, recordRep, start,
     settings.noBackspace, settings.stopOnError, settings.clickSound, settings.errorSound, settings.soundVolume,
   ]);
 
@@ -127,6 +145,9 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
               all lessons
             </Link>
           </div>
+          <p style={{ marginTop: "var(--space-4)", fontSize: 12, color: "var(--text-muted)" }}>
+            <kbd>space</kbd> next lesson · <kbd>r</kbd> redo
+          </p>
         </div>
       ) : (
         <>
