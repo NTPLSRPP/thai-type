@@ -22,7 +22,7 @@ A Thai touch-typing trainer in the spirit of Monkeytype — structured lessons, 
 
 ## Screens
 
-| Lessons | Themes |
+| Lessons | Test |
 |---|---|
 | [![lessons](docs/screenshots/lessons.png)](docs/screenshots/lessons.png) | [![themes](docs/screenshots/theme-chisa.png)](docs/screenshots/theme-chisa.png) |
 
