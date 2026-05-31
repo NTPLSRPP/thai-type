@@ -56,7 +56,7 @@ export function ThemeEditor({
             aria-label="name"
             value={draft.name}
             onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-            style={inp}
+            className="tt-input"
           />
         </label>
 
@@ -76,7 +76,7 @@ export function ThemeEditor({
                 aria-label={`${c.label} value`}
                 value={draft.vars[c.key] ?? ""}
                 onChange={(e) => setVar(c.key, e.target.value)}
-                style={inp}
+                className="tt-input"
               />
             </span>
           </label>
@@ -88,7 +88,7 @@ export function ThemeEditor({
             aria-label="font"
             value={draft.vars["--font"]}
             onChange={(e) => setVar("--font", e.target.value)}
-            style={inp}
+            className="tt-input"
           >
             {FONT_OPTIONS.map((f) => (
               <option key={f.label} value={f.stack}>
@@ -104,7 +104,7 @@ export function ThemeEditor({
             aria-label="caret"
             value={draft.caretStyle}
             onChange={(e) => setDraft((d) => ({ ...d, caretStyle: e.target.value as Theme["caretStyle"] }))}
-            style={inp}
+            className="tt-input"
           >
             <option value="line">Line</option>
             <option value="block">Block</option>
@@ -155,10 +155,10 @@ export function ThemeEditor({
         )}
 
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-          <button onClick={() => onSave(draft)} style={btn}>
+          <button onClick={() => onSave(draft)} className="tt-btn">
             save
           </button>
-          <button onClick={onCancel} style={btn}>
+          <button onClick={onCancel} className="tt-btn">
             cancel
           </button>
         </div>
@@ -177,18 +177,4 @@ const lbl: React.CSSProperties = {
   gap: 4,
   fontSize: 13,
   color: "var(--text)",
-};
-const inp: React.CSSProperties = {
-  background: "var(--bg)",
-  color: "var(--text-typed)",
-  border: "1px solid #3a3c3f",
-  borderRadius: 4,
-  padding: "4px 8px",
-};
-const btn: React.CSSProperties = {
-  background: "transparent",
-  color: "var(--text)",
-  border: "1px solid var(--text)",
-  padding: "8px 16px",
-  cursor: "pointer",
 };

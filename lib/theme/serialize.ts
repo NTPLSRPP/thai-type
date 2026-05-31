@@ -3,30 +3,37 @@ import type { CaretStyle, SoundId, Theme } from "./types";
 const CARETS: CaretStyle[] = ["line", "block", "underline"];
 const SOUNDS: SoundId[] = ["off", "click"];
 
-let counter = 0;
-function freshId(): string {
-  counter += 1;
-  return `custom-${counter}-${exportCounterSeed()}`;
-}
-// deterministic-enough unique seed without Date.now/Math.random in hot path
-function exportCounterSeed(): string {
-  return counter.toString(36) + (counter * 2654435761 % 1000000).toString(36);
-}
+// Keys an imported theme is allowed to set. Anything else is dropped.
+const ALLOWED_VARS = ["--bg", "--text", "--text-typed", "--accent", "--error", "--caret", "--font"];
+const REQUIRED_VARS = ["--bg", "--text", "--text-typed", "--accent", "--caret", "--font"];
+// Reject CSS values that can trigger an outbound request or escape the value context.
+const UNSAFE_VALUE = /url\(|image-set\(|image\(|expression\(|@import|<\/?\w/i;
 
+// id is intentionally empty: useTheme.addCustom is the sole authority that assigns the real id.
 export function validateTheme(obj: unknown): Theme | null {
   if (typeof obj !== "object" || obj === null) return null;
   const o = obj as Record<string, unknown>;
   if (typeof o.name !== "string" || typeof o.vars !== "object" || o.vars === null) return null;
   const vars = o.vars as Record<string, unknown>;
-  for (const v of ["--bg", "--text", "--text-typed", "--accent", "--caret", "--font"]) {
-    if (typeof vars[v] !== "string") return null;
+
+  for (const k of REQUIRED_VARS) {
+    if (typeof vars[k] !== "string") return null;
   }
+
+  const outVars: Record<string, string> = {};
+  for (const k of ALLOWED_VARS) {
+    const v = vars[k];
+    if (typeof v !== "string") continue;
+    if (UNSAFE_VALUE.test(v)) return null;
+    outVars[k] = v;
+  }
+
   const caretStyle = CARETS.includes(o.caretStyle as CaretStyle) ? (o.caretStyle as CaretStyle) : "line";
   const sound = SOUNDS.includes(o.sound as SoundId) ? (o.sound as SoundId) : "off";
   return {
-    id: freshId(),
+    id: "",
     name: o.name,
-    vars: { ...(vars as Record<string, string>) },
+    vars: outVars,
     caretStyle,
     sound,
     background: null, // imported themes drop image refs (blob not portable via code)

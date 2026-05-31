@@ -10,3 +10,49 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: var(--font); }
+
+/* Interactive chrome — pseudo-states inline styles cannot express. Motion stays on transform/opacity. */
+.tt-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--text);
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font: inherit;
+  transition: transform 120ms, opacity 120ms;
+}
+.tt-btn:hover { opacity: 0.75; }
+.tt-btn:active { transform: translateY(1px); }
+.tt-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.tt-input {
+  background: var(--bg);
+  color: var(--text-typed);
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font: inherit;
+}
+.tt-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.tt-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 120ms;
+}
+.tt-icon-btn:hover { transform: scale(1.2); }
+.tt-icon-btn:focus-visible { outline: 2px solid var(--accent); }
+
+.theme-card {
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--text) 30%, transparent);
+  transition: transform 120ms, box-shadow 120ms;
+}
+.theme-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+.theme-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-card[data-active="true"] { border: 2px solid var(--accent); }

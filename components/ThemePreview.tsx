@@ -8,7 +8,7 @@ export function ThemePreview({ theme }: { theme: Theme }) {
         borderRadius: 10,
         background: theme.vars["--bg"],
         fontFamily: theme.vars["--font"],
-        border: "1px solid #3a3c3f",
+        border: `1px solid color-mix(in oklab, ${theme.vars["--text"]} 35%, transparent)`,
       }}
     >
       <div style={{ fontSize: 22 }}>

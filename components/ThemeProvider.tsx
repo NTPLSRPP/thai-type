@@ -11,6 +11,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = activeTheme();
   const [bgUrl, setBgUrl] = useState<string | null>(null);
 
+  // Hydrate persisted theme/customs after mount so the first render matches SSR HTML.
+  useEffect(() => {
+    useTheme.getState().reload();
+  }, []);
+
   useEffect(() => {
     if (theme) applyTheme(theme, document.documentElement);
   }, [theme, activeId, customs]);

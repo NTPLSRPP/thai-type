@@ -21,14 +21,15 @@ interface ThemeState {
   activeTheme(): Theme | undefined;
   setActive(id: string): void;
   addCustom(draft: Theme): Theme;
-  updateCustom(theme: Theme): void;
   deleteCustom(id: string): void;
   reload(): void;
 }
 
+// Seed with deterministic, server-safe defaults so the first client render matches
+// the SSR HTML. ThemeProvider calls reload() on mount to hydrate from localStorage.
 export const useTheme = create<ThemeState>((set, get) => ({
-  activeId: loadActiveId() ?? "minimal-dark",
-  customs: loadCustomThemes(),
+  activeId: "minimal-dark",
+  customs: [],
   allThemes() {
     return [...PRESETS, ...get().customs];
   },
@@ -46,11 +47,6 @@ export const useTheme = create<ThemeState>((set, get) => ({
     set({ customs });
     saveCustomThemes(customs);
     return theme;
-  },
-  updateCustom(theme) {
-    const customs = get().customs.map((t) => (t.id === theme.id ? theme : t));
-    set({ customs });
-    saveCustomThemes(customs);
   },
   deleteCustom(id) {
     const customs = get().customs.filter((t) => t.id !== id);
