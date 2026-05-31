@@ -15,8 +15,7 @@ import { playClick, playError } from "@/lib/sound/sound";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
 import type { EngineSnapshot } from "@/lib/engine/types";
 import { Words } from "./Words";
-import { Keyboard } from "./Keyboard";
-import { Hands } from "./Hands";
+import { KeyboardWithHands } from "./KeyboardWithHands";
 
 interface SubLessonRunnerProps {
   id: number;
@@ -175,23 +174,19 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
               />
             )}
           </div>
-          {(settings.showKeyboard || settings.showHands) && (
-            <div style={{ position: "relative" }}>
-              {settings.showKeyboard && (
-                <Keyboard
-                  layout={layout}
-                  nextChar={nextChar}
-                  errorCounts={errorCounts}
-                  size={settings.keyboardSize}
-                  showShiftLegend={settings.showShiftLegend}
-                  fingerColors={settings.fingerColors}
-                  nextKeyHint={settings.nextKeyHint}
-                  heatmap={settings.heatmap}
-                />
-              )}
-              {settings.showHands && <Hands activeFinger={activeFinger} overlay={settings.showKeyboard} />}
-            </div>
-          )}
+          <KeyboardWithHands
+            layout={layout}
+            nextChar={nextChar}
+            errorCounts={errorCounts}
+            size={settings.keyboardSize}
+            showShiftLegend={settings.showShiftLegend}
+            fingerColors={settings.fingerColors}
+            nextKeyHint={settings.nextKeyHint}
+            heatmap={settings.heatmap}
+            showKeyboard={settings.showKeyboard}
+            showHands={settings.showHands}
+            activeFinger={activeFinger}
+          />
         </>
       )}
     </div>

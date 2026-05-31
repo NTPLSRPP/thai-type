@@ -18,8 +18,7 @@ import { Words } from "./Words";
 import { StatsBar } from "./StatsBar";
 import { Results } from "./Results";
 import { ConfigBar } from "./ConfigBar";
-import { Keyboard } from "./Keyboard";
-import { Hands } from "./Hands";
+import { KeyboardWithHands } from "./KeyboardWithHands";
 
 function fingerForChar(layout: ReturnType<typeof getLayout>, ch: string | null): HandFinger | null {
   if (!ch) return null;
@@ -201,24 +200,22 @@ export function TestScreen({ testText }: { testText?: string }) {
   const series = useMemo(() => (snap ? wpmSeries(snap.keystrokes) : []), [snap]);
   const activeFinger = fingerForChar(layout, nextChar);
 
-  const keyboard = s.showKeyboard ? (
-    <Keyboard
-      layout={layout}
-      nextChar={inputMode === "app-remap" ? nextChar : null}
-      errorCounts={errorCounts}
-      size={s.keyboardSize}
-      showShiftLegend={s.showShiftLegend}
-      fingerColors={s.fingerColors}
-      nextKeyHint={s.nextKeyHint}
-      heatmap={s.heatmap}
-    />
-  ) : null;
+  const kbProps = {
+    layout,
+    errorCounts,
+    size: s.keyboardSize,
+    showShiftLegend: s.showShiftLegend,
+    fingerColors: s.fingerColors,
+    nextKeyHint: s.nextKeyHint,
+    heatmap: s.heatmap,
+    showKeyboard: s.showKeyboard,
+  };
 
   if (metrics) {
     return (
       <div>
         <Results metrics={metrics} onRestart={start} series={series} />
-        {keyboard}
+        <KeyboardWithHands {...kbProps} nextChar={null} showHands={false} activeFinger={null} />
       </div>
     );
   }
@@ -251,12 +248,12 @@ export function TestScreen({ testText }: { testText?: string }) {
           )}
         </div>
       </div>
-      {(s.showKeyboard || s.showHands) && (
-        <div style={{ position: "relative" }}>
-          {keyboard}
-          {s.showHands && <Hands activeFinger={activeFinger} overlay={s.showKeyboard} />}
-        </div>
-      )}
+      <KeyboardWithHands
+        {...kbProps}
+        nextChar={inputMode === "app-remap" ? nextChar : null}
+        showHands={s.showHands}
+        activeFinger={activeFinger}
+      />
     </div>
   );
 }
