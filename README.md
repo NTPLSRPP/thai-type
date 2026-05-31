@@ -71,3 +71,7 @@ npm run e2e  # Playwright — lessons, layout switching, theming, stats flows
 
 - The bundled wallpaper art (`public/themes/`) and one remote wallpaper URL are third-party images used for the Hatsune Miku / Chisa preset themes; replace them with your own assets for redistribution.
 - This is not the Next.js you may know — it targets Next 16; check `node_modules/next/dist/docs/` for version-specific APIs before changing framework code.
+
+## License
+
+[MIT](./LICENSE) © NTPLSRPP. The MIT license covers this project's source; bundled third-party wallpaper art (see Notes) is not covered and remains owned by its respective creators.
