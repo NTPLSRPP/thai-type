@@ -1,6 +1,7 @@
 import type { Metrics } from "@/lib/engine/metrics";
 import type { WpmPoint } from "@/lib/stats/types";
 import { WpmGraph } from "./WpmGraph";
+import { StatCard } from "./StatCard";
 
 export function Results({
   metrics,
@@ -11,19 +12,13 @@ export function Results({
   onRestart: () => void;
   series?: WpmPoint[];
 }) {
-  const Stat = ({ label, value }: { label: string; value: string }) => (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: 40, color: "var(--accent)" }}>{value}</div>
-      <div style={{ fontSize: 13 }}>{label}</div>
-    </div>
-  );
   return (
     <div>
       <div style={{ display: "flex", gap: 40, marginBottom: 24 }}>
-        <Stat label="wpm" value={`${metrics.wpm}`} />
-        <Stat label="accuracy" value={`${metrics.accuracy}%`} />
-        <Stat label="consistency" value={`${metrics.consistency}%`} />
-        <Stat label="raw" value={`${metrics.rawWpm}`} />
+        <StatCard label="wpm" value={`${metrics.wpm}`} />
+        <StatCard label="accuracy" value={`${metrics.accuracy}%`} />
+        <StatCard label="consistency" value={`${metrics.consistency}%`} />
+        <StatCard label="raw" value={`${metrics.rawWpm}`} />
       </div>
       {series.length > 0 && (
         <div style={{ margin: "8px 0 24px" }}>

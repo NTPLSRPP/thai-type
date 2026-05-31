@@ -91,7 +91,7 @@ export function TestScreen({ testText }: { testText?: string }) {
 
   const finishNow = useCallback(() => {
     const e = engineRef.current;
-    if (!e) return;
+    if (!e || e.snapshot().finished) return; // idempotent: never record a finish twice
     e.finish();
     const s = e.snapshot();
     setSnap(s);
@@ -112,20 +112,21 @@ export function TestScreen({ testText }: { testText?: string }) {
   useEffect(() => {
     if (mode !== "time" || testText || !snap || snap.finished) return;
     if (snap.startedAt === null) return;
+    // Pure updater: only decrements. The finish is fired by a separate effect so it
+    // runs exactly once (Strict-Mode double-invokes updaters; side effects belong outside).
     timerRef.current = setInterval(() => {
-      setTimeLeft((tl) => {
-        if (tl === null) return tl;
-        if (tl <= 1) {
-          finishNow();
-          return 0;
-        }
-        return tl - 1;
-      });
+      setTimeLeft((tl) => (tl === null ? tl : Math.max(0, tl - 1)));
     }, 1000);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [mode, testText, snap?.startedAt, snap?.finished, finishNow, snap]);
+  }, [mode, testText, snap?.startedAt, snap?.finished, snap]);
+
+  // Finish exactly once when the countdown reaches zero.
+  useEffect(() => {
+    if (mode !== "time" || testText || metrics) return;
+    if (timeLeft === 0 && engineRef.current) finishNow();
+  }, [timeLeft, mode, testText, metrics, finishNow]);
 
   useEffect(() => {
     function onKey(ev: KeyboardEvent) {
@@ -169,9 +170,9 @@ export function TestScreen({ testText }: { testText?: string }) {
     () => (snap ? errorCountsByChar(snap.keystrokes) : new Map<string, number>()),
     [snap],
   );
+  const series = useMemo(() => (snap ? wpmSeries(snap.keystrokes) : []), [snap]);
 
   if (metrics) {
-    const series = snap ? wpmSeries(snap.keystrokes) : [];
     return (
       <div>
         <Results metrics={metrics} onRestart={start} series={series} />

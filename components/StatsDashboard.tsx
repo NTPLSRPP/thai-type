@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useStats } from "@/stores/statsStore";
 import { useKeyModel } from "@/stores/keyModelStore";
 import { useSettings } from "@/stores/settingsStore";
@@ -7,7 +7,15 @@ import { getLayout } from "@/lib/layouts/registry";
 import { computeAggregates } from "@/lib/stats/aggregates";
 import { WpmGraph } from "./WpmGraph";
 import { Keyboard } from "./Keyboard";
+import { StatCard } from "./StatCard";
 import type { WpmPoint } from "@/lib/stats/types";
+
+const heading: React.CSSProperties = {
+  fontSize: 12,
+  textTransform: "uppercase",
+  letterSpacing: 2,
+  color: "var(--text-typed)",
+};
 
 export function StatsDashboard() {
   const sessions = useStats((s) => s.sessions);
@@ -15,6 +23,7 @@ export function StatsDashboard() {
   const model = useKeyModel((s) => s.model);
   const layoutId = useSettings((s) => s.layoutId);
   const layout = getLayout(layoutId);
+  const [confirming, setConfirming] = useState(false);
 
   const agg = useMemo(() => computeAggregates(sessions), [sessions]);
 
@@ -30,46 +39,53 @@ export function StatsDashboard() {
   }, [model]);
 
   if (sessions.length === 0) {
-    return <p style={{ color: "var(--text)" }}>No tests yet. Finish a test to see your stats.</p>;
+    return (
+      <p style={{ color: "var(--text-typed)" }}>No tests yet. Finish a test to see your stats.</p>
+    );
   }
-
-  const Stat = ({ id, label, value }: { id: string; label: string; value: string }) => (
-    <div data-testid={`agg-${id}`} style={{ textAlign: "center" }}>
-      <div style={{ fontSize: 32, color: "var(--accent)" }}>{value}</div>
-      <div style={{ fontSize: 12, color: "var(--text)" }}>{label}</div>
-    </div>
-  );
 
   return (
     <div>
       <div style={{ display: "flex", gap: 40, marginBottom: 28 }}>
-        <Stat id="bestWpm" label="best wpm" value={`${agg.bestWpm}`} />
-        <Stat id="avgWpm" label="avg wpm" value={`${agg.avgWpm}`} />
-        <Stat id="avgAccuracy" label="avg acc" value={`${agg.avgAccuracy}%`} />
-        <Stat id="totalTests" label="tests" value={`${agg.totalTests}`} />
+        <StatCard testId="agg-bestWpm" label="best wpm" value={`${agg.bestWpm}`} valueSize={32} labelSize={12} />
+        <StatCard testId="agg-avgWpm" label="avg wpm" value={`${agg.avgWpm}`} valueSize={32} labelSize={12} />
+        <StatCard testId="agg-avgAccuracy" label="avg acc" value={`${agg.avgAccuracy}%`} valueSize={32} labelSize={12} />
+        <StatCard testId="agg-totalTests" label="tests" value={`${agg.totalTests}`} valueSize={32} labelSize={12} />
       </div>
 
-      <h2 style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 2, color: "var(--text)" }}>
-        wpm trend
-      </h2>
-      <WpmGraph points={trend} />
+      <h2 style={heading}>wpm trend</h2>
+      <WpmGraph points={trend} xLabel="test #" />
 
-      <h2
-        style={{
-          fontSize: 12,
-          textTransform: "uppercase",
-          letterSpacing: 2,
-          color: "var(--text)",
-          marginTop: 24,
-        }}
-      >
-        error heatmap
-      </h2>
+      <h2 style={{ ...heading, marginTop: 24 }}>error heatmap</h2>
       <Keyboard layout={layout} nextChar={null} errorCounts={errorCounts} />
 
-      <button onClick={clear} className="tt-btn" style={{ marginTop: 24 }}>
-        clear history
-      </button>
+      <div style={{ marginTop: 24 }}>
+        {confirming ? (
+          <span style={{ display: "flex", gap: 12 }}>
+            <button
+              onClick={() => {
+                clear();
+                setConfirming(false);
+              }}
+              className="tt-btn"
+              style={{ color: "var(--error)", borderColor: "var(--error)" }}
+            >
+              really clear?
+            </button>
+            <button onClick={() => setConfirming(false)} className="tt-btn">
+              cancel
+            </button>
+          </span>
+        ) : (
+          <button
+            onClick={() => setConfirming(true)}
+            className="tt-btn"
+            style={{ color: "var(--error)", borderColor: "var(--error)" }}
+          >
+            clear history
+          </button>
+        )}
+      </div>
     </div>
   );
 }
