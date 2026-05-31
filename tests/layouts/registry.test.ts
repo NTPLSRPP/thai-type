@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { LAYOUTS, getLayout, layoutList } from "@/lib/layouts/registry";
+import { KEYBOARD_ROWS } from "@/lib/layouts/geometry";
 
 describe("layout registry", () => {
   it("contains all three layouts", () => {
@@ -19,6 +20,16 @@ describe("layout registry", () => {
       for (const code of home) {
         expect(layout.keys[code], `${layout.id} missing ${code}`).toBeDefined();
         expect(layout.keys[code].normal.length).toBeGreaterThan(0);
+      }
+    }
+  });
+  it("every layout maps every physical key in the on-screen keyboard geometry", () => {
+    const codes = KEYBOARD_ROWS.flat();
+    for (const layout of Object.values(LAYOUTS)) {
+      for (const code of codes) {
+        const def = layout.keys[code];
+        expect(def, `${layout.id} missing geometry key ${code}`).toBeDefined();
+        expect(def.normal.length, `${layout.id} ${code} has empty normal`).toBeGreaterThan(0);
       }
     }
   });

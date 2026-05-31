@@ -4,6 +4,20 @@ export const kedmanee: Layout = {
   id: "kedmanee",
   name: "Kedmanee",
   keys: {
+    Backquote: { normal: "_", shift: "%", finger: "left-pinky", row: "number" },
+    Digit1: { normal: "ๅ", shift: "+", finger: "left-pinky", row: "number" },
+    Digit2: { normal: "/", shift: "๑", finger: "left-ring", row: "number" },
+    Digit3: { normal: "-", shift: "๒", finger: "left-middle", row: "number" },
+    Digit4: { normal: "ภ", shift: "๓", finger: "left-index", row: "number" },
+    Digit5: { normal: "ถ", shift: "๔", finger: "left-index", row: "number" },
+    Digit6: { normal: "ุ", shift: "ู", finger: "right-index", row: "number" },
+    Digit7: { normal: "ึ", shift: "฿", finger: "right-index", row: "number" },
+    Digit8: { normal: "ค", shift: "๕", finger: "right-middle", row: "number" },
+    Digit9: { normal: "ต", shift: "๖", finger: "right-ring", row: "number" },
+    Digit0: { normal: "จ", shift: "๗", finger: "right-pinky", row: "number" },
+    Minus: { normal: "ข", shift: "๘", finger: "right-pinky", row: "number" },
+    Equal: { normal: "ช", shift: "๙", finger: "right-pinky", row: "number" },
+
     KeyQ: { normal: "ๆ", shift: "๐", finger: "left-pinky", row: "top" },
     KeyW: { normal: "ไ", shift: "\"", finger: "left-ring", row: "top" },
     KeyE: { normal: "ำ", shift: "ฎ", finger: "left-middle", row: "top" },
@@ -14,6 +28,10 @@ export const kedmanee: Layout = {
     KeyI: { normal: "ร", shift: "ณ", finger: "right-middle", row: "top" },
     KeyO: { normal: "น", shift: "ฯ", finger: "right-ring", row: "top" },
     KeyP: { normal: "ย", shift: "ญ", finger: "right-pinky", row: "top" },
+    BracketLeft: { normal: "บ", shift: "ฐ", finger: "right-pinky", row: "top" },
+    BracketRight: { normal: "ล", shift: ",", finger: "right-pinky", row: "top" },
+    Backslash: { normal: "ฃ", shift: "ฅ", finger: "right-pinky", row: "top" },
+
     KeyA: { normal: "ฟ", shift: "ฤ", finger: "left-pinky", row: "home" },
     KeyS: { normal: "ห", shift: "ฆ", finger: "left-ring", row: "home" },
     KeyD: { normal: "ก", shift: "ฏ", finger: "left-middle", row: "home" },
@@ -23,6 +41,9 @@ export const kedmanee: Layout = {
     KeyJ: { normal: "่", shift: "๋", finger: "right-index", row: "home" },
     KeyK: { normal: "า", shift: "ษ", finger: "right-middle", row: "home" },
     KeyL: { normal: "ส", shift: "ศ", finger: "right-ring", row: "home" },
+    Semicolon: { normal: "ว", shift: "ซ", finger: "right-ring", row: "home" },
+    Quote: { normal: "ง", shift: ".", finger: "right-pinky", row: "home" },
+
     KeyZ: { normal: "ผ", shift: "(", finger: "left-pinky", row: "bottom" },
     KeyX: { normal: "ป", shift: ")", finger: "left-ring", row: "bottom" },
     KeyC: { normal: "แ", shift: "ฉ", finger: "left-middle", row: "bottom" },
@@ -30,6 +51,10 @@ export const kedmanee: Layout = {
     KeyB: { normal: "ิ", shift: "ฺ", finger: "left-index", row: "bottom" },
     KeyN: { normal: "ื", shift: "์", finger: "right-index", row: "bottom" },
     KeyM: { normal: "ท", shift: "?", finger: "right-index", row: "bottom" },
+    Comma: { normal: "ม", shift: "ฒ", finger: "right-middle", row: "bottom" },
+    Period: { normal: "ใ", shift: "ฬ", finger: "right-ring", row: "bottom" },
+    Slash: { normal: "ฝ", shift: "ฦ", finger: "right-pinky", row: "bottom" },
+
     Space: { normal: " ", shift: " ", finger: "right-index", row: "bottom" },
   },
 };
