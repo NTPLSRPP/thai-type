@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/stores/themeStore";
+import { useSettings } from "@/stores/settingsStore";
 import { applyTheme } from "@/lib/theme/apply";
 import { getImage } from "@/lib/storage/imageStore";
 
@@ -11,9 +12,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = activeTheme();
   const [bgUrl, setBgUrl] = useState<string | null>(null);
 
-  // Hydrate persisted theme/customs after mount so the first render matches SSR HTML.
+  // Hydrate persisted theme/customs + settings after mount so the first render matches SSR HTML.
   useEffect(() => {
     useTheme.getState().reload();
+    useSettings.getState().reload();
   }, []);
 
   useEffect(() => {

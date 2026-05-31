@@ -3,6 +3,17 @@
 **Date:** 2026-05-31
 **Status:** Approved (design phase)
 
+> **⚠️ Partially superseded (2026-06-01).** The lessons subsystem described below as a
+> *generated-drill + adaptive unit* system was replaced by the real **typingth.com**
+> curriculum: 20 chapters / 84 fixed-text sub-lessons (`lib/curriculum/typingth.ts` →
+> `chapters.ts`), 3 reps to complete each, persisted via `lib/storage/lessonProgress.ts`
+> + `stores/lessonProgressStore.ts`, UI in `components/ChapterList.tsx` +
+> `SubLessonRunner.tsx`, route `app/lessons/[id]`. The modules `units.ts`, `drills.ts`,
+> `adaptive.ts`, `lib/storage/progress.ts`, `stores/progressStore.ts`, `LessonMap.tsx`,
+> `LessonRunner.tsx`, and route `lessons/[unit]` no longer exist. Sections 3 (Curriculum)
+> and the `/lessons/[unit]` route row below are historical. Engine, layouts, themes, stats,
+> and the free test are still accurate.
+
 A Thai touch-typing trainer combining a structured lesson curriculum with a Monkeytype-style free typing test. Fully customizable theming (including image/anime themes). Three Thai keyboard layouts. Local-only persistence, no backend.
 
 ## Goals

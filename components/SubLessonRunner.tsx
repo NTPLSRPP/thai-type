@@ -24,7 +24,6 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
   const caretStyle = useTheme((s) => s.activeTheme()?.caretStyle ?? "line");
   const recordModel = useKeyModel((s) => s.record);
   const recordRep = useLessonProgress((s) => s.record);
-  const storedReps = useLessonProgress((s) => s.reps[id] ?? 0);
 
   const sub = getSubLesson(id);
   const text = textOverride ?? sub?.text ?? "";
@@ -87,7 +86,8 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
   if (!sub) return <p style={{ color: "var(--text-typed)" }}>Unknown lesson.</p>;
 
   const next = nextSubLessonId(id);
-  const repInfo = done ? REPS_TO_COMPLETE : Math.max(repsDone, storedReps);
+  // Session counter only — reps completed this sitting (not mixed with persisted total).
+  const repInfo = done ? REPS_TO_COMPLETE : repsDone;
 
   return (
     <div>

@@ -1,5 +1,13 @@
 # Plan 3 — Curriculum + Adaptive Drills
 
+> **⚠️ SUPERSEDED (2026-06-01) — do not execute.** This plan's generated-drill + adaptive
+> unit system (`units.ts`, `drills.ts`, `adaptive.ts`, `lib/storage/progress.ts`,
+> `stores/progressStore.ts`, `LessonMap.tsx`, `LessonRunner.tsx`, route `lessons/[unit]`)
+> was replaced by the real typingth.com curriculum. Live equivalents: `lib/curriculum/typingth.ts`
+> + `chapters.ts`, `lib/storage/lessonProgress.ts`, `stores/lessonProgressStore.ts`,
+> `components/ChapterList.tsx` + `SubLessonRunner.tsx`, route `app/lessons/[id]`. The per-key
+> model + heatmap survive (`keyStats.ts`, stats dashboard). Kept as a historical record only.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** A structured lesson curriculum (fixed progressive path) with procedurally generated drills, a keybr-style adaptive engine that weights the learner's weakest characters, cross-session per-character stats, lesson progress/unlocking, lesson UI + routes, and wiring so both lessons and the free test feed the adaptive model.

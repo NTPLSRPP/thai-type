@@ -56,3 +56,14 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .theme-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
 .theme-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .theme-card[data-active="true"] { border: 2px solid var(--accent); }
+
+/* Chapter accordion toggle — inset focus ring (parent section is overflow:hidden). */
+.chapter-toggle { transition: background 120ms, transform 120ms; }
+.chapter-toggle:hover { background: color-mix(in oklab, var(--text) 8%, transparent); }
+.chapter-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.chapter-toggle:active { transform: translateY(1px); }
+
+/* Sub-lesson cells (links in the chapter grid). */
+.sublesson-cell { transition: border-color 120ms, transform 120ms; }
+.sublesson-cell:hover { border-color: var(--accent); transform: translateY(-1px); }
+.sublesson-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

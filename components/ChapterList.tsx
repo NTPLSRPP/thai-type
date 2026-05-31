@@ -25,6 +25,7 @@ export function ChapterList() {
             <button
               onClick={() => setOpen((o) => ({ ...o, [ch.index]: !o[ch.index] }))}
               aria-expanded={isOpen}
+              className="chapter-toggle"
               style={{
                 width: "100%",
                 display: "flex",
@@ -59,7 +60,7 @@ export function ChapterList() {
                 </span>
                 <span style={{ fontSize: 15 }}>{ch.title}</span>
               </span>
-              <span style={{ fontSize: 12, color: "var(--text)", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: 12, color: "var(--text-typed)", whiteSpace: "nowrap" }}>
                 {doneCount}/{ch.subLessons.length} · {isOpen ? "▾" : "▸"}
               </span>
             </button>
@@ -92,6 +93,7 @@ function SubLessonCell({ sub, reps }: { sub: SubLesson; reps: number }) {
       href={`/lessons/${sub.id}`}
       data-testid={`sub-${sub.id}`}
       data-complete={complete ? "true" : "false"}
+      className="sublesson-cell"
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -105,8 +107,8 @@ function SubLessonCell({ sub, reps }: { sub: SubLesson; reps: number }) {
         fontSize: 13,
       }}
     >
-      <span style={{ color: "var(--text)" }}>{sub.subIndex + 1}</span>
-      <span style={{ color: complete ? "var(--accent)" : "var(--text)" }}>
+      <span style={{ color: "var(--text-typed)" }}>{sub.subIndex + 1}</span>
+      <span style={{ color: complete ? "var(--accent)" : "var(--text-typed)" }}>
         {complete ? "✓" : `${reps}/${REPS_TO_COMPLETE}`}
       </span>
     </Link>
