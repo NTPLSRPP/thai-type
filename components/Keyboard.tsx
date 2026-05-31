@@ -17,10 +17,22 @@ interface KeyboardProps {
   layout: Layout;
   nextChar: string | null;
   errorCounts: Map<string, number>;
+  showShiftLegend?: boolean;
+  fingerColors?: boolean;
+  nextKeyHint?: boolean;
+  heatmap?: boolean;
 }
 
-export function Keyboard({ layout, nextChar, errorCounts }: KeyboardProps) {
-  const nextKey = nextChar ? findKeyForChar(layout, nextChar) : null;
+export function Keyboard({
+  layout,
+  nextChar,
+  errorCounts,
+  showShiftLegend = true,
+  fingerColors = true,
+  nextKeyHint = true,
+  heatmap = true,
+}: KeyboardProps) {
+  const nextKey = nextKeyHint && nextChar ? findKeyForChar(layout, nextChar) : null;
   const maxErr = Math.max(1, ...Array.from(errorCounts.values()));
 
   return (
@@ -38,10 +50,11 @@ export function Keyboard({ layout, nextChar, errorCounts }: KeyboardProps) {
           {row.map((code) => {
             const def = layout.keys[code];
             const isNext = nextKey?.code === code;
-            const errs = def ? (errorCounts.get(def.normal) ?? 0) : 0;
+            const errs = heatmap && def ? (errorCounts.get(def.normal) ?? 0) : 0;
             const heat = errs / maxErr;
             const isSpace = code === "Space";
-            const showShift = !!def && !isSpace && !!def.shift && def.shift !== def.normal;
+            const showShift = showShiftLegend && !!def && !isSpace && !!def.shift && def.shift !== def.normal;
+            const fingerColor = fingerColors && def ? (FINGER_COLOR[def.finger] ?? "var(--hairline)") : "var(--hairline)";
             return (
               <div
                 key={code}
@@ -62,10 +75,10 @@ export function Keyboard({ layout, nextChar, errorCounts }: KeyboardProps) {
                   borderRightWidth: isNext ? 2 : 1,
                   borderBottomWidth: 3,
                   borderStyle: "solid",
-                  borderTopColor: isNext ? "var(--accent)" : "#3a3c3f",
-                  borderLeftColor: isNext ? "var(--accent)" : "#3a3c3f",
-                  borderRightColor: isNext ? "var(--accent)" : "#3a3c3f",
-                  borderBottomColor: def ? (FINGER_COLOR[def.finger] ?? "#3a3c3f") : "#3a3c3f",
+                  borderTopColor: isNext ? "var(--accent)" : "var(--hairline)",
+                  borderLeftColor: isNext ? "var(--accent)" : "var(--hairline)",
+                  borderRightColor: isNext ? "var(--accent)" : "var(--hairline)",
+                  borderBottomColor: fingerColor,
                   boxShadow: isNext ? "0 0 12px var(--accent)" : "none",
                   transform: isNext ? "translateY(-2px)" : "none",
                   transition: "transform 120ms, box-shadow 120ms",

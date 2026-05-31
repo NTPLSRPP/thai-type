@@ -3,12 +3,12 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useSettings } from "@/stores/settingsStore";
 import { useKeyModel } from "@/stores/keyModelStore";
-import { useTheme } from "@/stores/themeStore";
 import { useLessonProgress } from "@/stores/lessonProgressStore";
 import { getLayout } from "@/lib/layouts/registry";
 import { getSubLesson, nextSubLessonId, CHAPTERS, REPS_TO_COMPLETE } from "@/lib/curriculum/chapters";
 import { resolveKey } from "@/lib/layouts/resolve";
 import { errorCountsByChar } from "@/lib/engine/keyStats";
+import { playClick, playError } from "@/lib/sound/sound";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
 import type { EngineSnapshot } from "@/lib/engine/types";
 import { Words } from "./Words";
@@ -20,8 +20,8 @@ interface SubLessonRunnerProps {
 }
 
 export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
-  const layout = getLayout(useSettings((s) => s.layoutId));
-  const caretStyle = useTheme((s) => s.activeTheme()?.caretStyle ?? "line");
+  const settings = useSettings();
+  const layout = getLayout(settings.layoutId);
   const recordModel = useKeyModel((s) => s.record);
   const recordRep = useLessonProgress((s) => s.record);
 
@@ -54,6 +54,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
       if (!e || done) return;
       if (ev.code === "Backspace" || ev.key === "Backspace") {
         ev.preventDefault();
+        if (settings.noBackspace) return;
         e.back();
         setSnap(e.snapshot());
         return;
@@ -61,9 +62,12 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
       const ch = resolveKey(layout, ev.code, ev.shiftKey);
       if (ch === null) return;
       ev.preventDefault();
-      e.press(ch);
+      e.press(ch, settings.stopOnError !== "letter");
       const s = e.snapshot();
       setSnap(s);
+      const last = s.keystrokes[s.keystrokes.length - 1];
+      if (settings.clickSound) playClick(settings.soundVolume);
+      if (settings.errorSound && last && !last.correct) playError(settings.soundVolume);
       if (s.finished) {
         recordModel(s.keystrokes);
         const n = recordRep(id);
@@ -74,7 +78,10 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [done, layout, id, recordModel, recordRep, start]);
+  }, [
+    done, layout, id, recordModel, recordRep, start,
+    settings.noBackspace, settings.stopOnError, settings.clickSound, settings.errorSound, settings.soundVolume,
+  ]);
 
   const nextChar =
     snap && !snap.finished && snap.cursor < snap.cells.length ? snap.cells[snap.cursor].target : null;
@@ -123,10 +130,31 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
         </div>
       ) : (
         <>
-          <div style={{ marginTop: 16 }}>
-            {snap && <Words cells={snap.cells} cursor={snap.cursor} text={text} caretStyle={caretStyle} />}
+          <div style={{ marginTop: "var(--space-6)" }}>
+            {snap && (
+              <Words
+                cells={snap.cells}
+                cursor={snap.cursor}
+                text={text}
+                caretStyle={settings.caretStyle}
+                smoothCaret={settings.smoothCaret}
+                blind={settings.blindMode}
+                fontSize={settings.fontSize}
+                fontFamily={settings.typingFont}
+              />
+            )}
           </div>
-          <Keyboard layout={layout} nextChar={nextChar} errorCounts={errorCounts} />
+          {settings.showKeyboard && (
+            <Keyboard
+              layout={layout}
+              nextChar={nextChar}
+              errorCounts={errorCounts}
+              showShiftLegend={settings.showShiftLegend}
+              fingerColors={settings.fingerColors}
+              nextKeyHint={settings.nextKeyHint}
+              heatmap={settings.heatmap}
+            />
+          )}
         </>
       )}
     </div>
