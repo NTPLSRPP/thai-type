@@ -90,8 +90,7 @@ export function Keyboard({
                     fontSize: 9,
                     lineHeight: 1,
                     textAlign: "right",
-                    color: "var(--text)",
-                    opacity: 0.6,
+                    color: "var(--text-muted)",
                     minHeight: 9,
                   }}
                 >

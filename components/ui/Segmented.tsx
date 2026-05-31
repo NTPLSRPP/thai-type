@@ -39,6 +39,7 @@ export function Segmented<T extends string>({
             type="button"
             data-testid={`seg-${opt.value}`}
             aria-pressed={isActive}
+            className="tt-seg"
             onClick={() => onChange(opt.value)}
             style={{
               appearance: "none",
@@ -46,9 +47,10 @@ export function Segmented<T extends string>({
               cursor: "pointer",
               font: "inherit",
               fontSize: 14,
+              minHeight: 28,
               padding: "var(--space-1) var(--space-3)",
               borderRadius: "var(--radius-sm)",
-              color: isActive ? "var(--accent)" : "var(--text)",
+              color: isActive ? "var(--accent)" : "var(--text-muted)",
               background: isActive ? "var(--surface-2)" : "transparent",
               transition:
                 "color var(--dur) var(--ease), background var(--dur) var(--ease)",

@@ -4,15 +4,16 @@ type ToggleProps = {
   checked: boolean;
   onChange: (v: boolean) => void;
   id?: string;
+  ariaLabel?: string;
 };
 
-const TRACK_WIDTH = 40;
-const TRACK_HEIGHT = 22;
-const KNOB_SIZE = 16;
+const TRACK_WIDTH = 44;
+const TRACK_HEIGHT = 24; // >= WCAG 2.5.8 minimum target size
+const KNOB_SIZE = 18;
 const KNOB_INSET = (TRACK_HEIGHT - KNOB_SIZE) / 2;
 const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - KNOB_INSET * 2;
 
-export function Toggle({ checked, onChange, id }: ToggleProps) {
+export function Toggle({ checked, onChange, id, ariaLabel }: ToggleProps) {
   const handleToggle = () => onChange(!checked);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -28,7 +29,9 @@ export function Toggle({ checked, onChange, id }: ToggleProps) {
       id={id}
       role="switch"
       aria-checked={checked}
+      aria-label={ariaLabel}
       data-testid="toggle"
+      className="tt-switch"
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       style={{

@@ -52,6 +52,10 @@ export function Words({
               style.background = "var(--caret)";
               style.color = "var(--bg)";
             }
+            // caret "off" keeps a faint cue so the cursor is never lost (esp. with blind mode).
+            if (isCursor && caretStyle === "off") {
+              style.borderBottom = "2px solid color-mix(in oklab, var(--caret) 30%, transparent)";
+            }
             return (
               <span
                 key={idx}

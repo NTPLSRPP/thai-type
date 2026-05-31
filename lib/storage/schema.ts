@@ -59,14 +59,16 @@ export const DEFAULT_SETTINGS: Settings = {
   stopOnError: "off",
   noBackspace: false,
   blindMode: false,
-  quickRestart: "tab",
+  quickRestart: "esc", // Esc avoids hijacking Tab focus traversal by default
+
+
 
   caretStyle: "line",
   smoothCaret: true,
   liveSpeed: true,
   liveAccuracy: true,
   fontSize: 28,
-  typingFont: "'JetBrains Mono', ui-monospace, monospace",
+  typingFont: "ui-monospace, 'JetBrains Mono', 'Cascadia Code', monospace",
   pageWidth: "normal",
   timerStyle: "text",
 

@@ -97,10 +97,10 @@ export function SettingsPanel({ mounted }: SettingsPanelProps) {
           />
         </SettingRow>
         <SettingRow title="confidence mode" description="disable backspace — no fixing mistakes">
-          <Toggle checked={s.noBackspace} onChange={(v) => update({ noBackspace: v })} />
+          <Toggle ariaLabel="confidence mode" checked={s.noBackspace} onChange={(v) => update({ noBackspace: v })} />
         </SettingRow>
         <SettingRow title="blind mode" description="hide per-character correctness while typing">
-          <Toggle checked={s.blindMode} onChange={(v) => update({ blindMode: v })} />
+          <Toggle ariaLabel="blind mode" checked={s.blindMode} onChange={(v) => update({ blindMode: v })} />
         </SettingRow>
         <SettingRow title="quick restart" description="key that restarts the test">
           <Segmented
@@ -131,16 +131,17 @@ export function SettingsPanel({ mounted }: SettingsPanelProps) {
           />
         </SettingRow>
         <SettingRow title="smooth caret" description="animate the caret between characters">
-          <Toggle checked={s.smoothCaret} onChange={(v) => update({ smoothCaret: v })} />
+          <Toggle ariaLabel="smooth caret" checked={s.smoothCaret} onChange={(v) => update({ smoothCaret: v })} />
         </SettingRow>
         <SettingRow title="live speed" description="show live wpm while typing">
-          <Toggle checked={s.liveSpeed} onChange={(v) => update({ liveSpeed: v })} />
+          <Toggle ariaLabel="live speed" checked={s.liveSpeed} onChange={(v) => update({ liveSpeed: v })} />
         </SettingRow>
         <SettingRow title="live accuracy" description="show live accuracy while typing">
-          <Toggle checked={s.liveAccuracy} onChange={(v) => update({ liveAccuracy: v })} />
+          <Toggle ariaLabel="live accuracy" checked={s.liveAccuracy} onChange={(v) => update({ liveAccuracy: v })} />
         </SettingRow>
         <SettingRow title="font size" description="typing text size in pixels">
           <Slider
+            ariaLabel="font size"
             value={s.fontSize}
             min={16}
             max={56}
@@ -183,31 +184,32 @@ export function SettingsPanel({ mounted }: SettingsPanelProps) {
 
       <SettingsSection title="on-screen keyboard">
         <SettingRow title="show keyboard" description="display the on-screen keyboard">
-          <Toggle checked={s.showKeyboard} onChange={(v) => update({ showKeyboard: v })} />
+          <Toggle ariaLabel="show keyboard" checked={s.showKeyboard} onChange={(v) => update({ showKeyboard: v })} />
         </SettingRow>
         <SettingRow title="shift legend" description="show shifted characters on each key">
-          <Toggle checked={s.showShiftLegend} onChange={(v) => update({ showShiftLegend: v })} />
+          <Toggle ariaLabel="shift legend" checked={s.showShiftLegend} onChange={(v) => update({ showShiftLegend: v })} />
         </SettingRow>
         <SettingRow title="finger colors" description="color keys by finger zone">
-          <Toggle checked={s.fingerColors} onChange={(v) => update({ fingerColors: v })} />
+          <Toggle ariaLabel="finger colors" checked={s.fingerColors} onChange={(v) => update({ fingerColors: v })} />
         </SettingRow>
         <SettingRow title="next key hint" description="highlight the next key to press">
-          <Toggle checked={s.nextKeyHint} onChange={(v) => update({ nextKeyHint: v })} />
+          <Toggle ariaLabel="next key hint" checked={s.nextKeyHint} onChange={(v) => update({ nextKeyHint: v })} />
         </SettingRow>
         <SettingRow title="heatmap" description="shade keys by error frequency">
-          <Toggle checked={s.heatmap} onChange={(v) => update({ heatmap: v })} />
+          <Toggle ariaLabel="heatmap" checked={s.heatmap} onChange={(v) => update({ heatmap: v })} />
         </SettingRow>
       </SettingsSection>
 
       <SettingsSection title="sound">
         <SettingRow title="click sound" description="play a sound on each keypress">
-          <Toggle checked={s.clickSound} onChange={(v) => update({ clickSound: v })} />
+          <Toggle ariaLabel="click sound" checked={s.clickSound} onChange={(v) => update({ clickSound: v })} />
         </SettingRow>
         <SettingRow title="error sound" description="play a sound on each mistake">
-          <Toggle checked={s.errorSound} onChange={(v) => update({ errorSound: v })} />
+          <Toggle ariaLabel="error sound" checked={s.errorSound} onChange={(v) => update({ errorSound: v })} />
         </SettingRow>
         <SettingRow title="volume" description="sound effect volume">
           <Slider
+            ariaLabel="volume"
             value={s.soundVolume}
             min={0}
             max={1}

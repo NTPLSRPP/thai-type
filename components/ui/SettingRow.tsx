@@ -47,7 +47,7 @@ export function SettingRow({
           <span
             style={{
               fontSize: 13,
-              color: "var(--text)",
+              color: "var(--text-muted)",
               lineHeight: 1.4,
             }}
           >

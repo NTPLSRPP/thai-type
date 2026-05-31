@@ -88,16 +88,21 @@ export function TestScreen({ testText }: { testText?: string }) {
     if (timerRef.current) clearInterval(timerRef.current);
   }, [mode, duration, testText, recordModel, persistSession]);
 
+  // Run only on the start/finish TRANSITIONS, not on every keystroke. Depending on the
+  // whole `snap` object (which is replaced on every press) would tear down + recreate the
+  // 1s interval each keystroke, so its first tick never lands for a real typist and the
+  // countdown stalls. Depend on the derived booleans instead.
+  const hasStarted = snap?.startedAt != null;
+  const isFinished = snap?.finished ?? false;
   useEffect(() => {
-    if (mode !== "time" || testText || !snap || snap.finished) return;
-    if (snap.startedAt === null) return;
+    if (mode !== "time" || testText || !hasStarted || isFinished) return;
     timerRef.current = setInterval(() => {
       setTimeLeft((tl) => (tl === null ? tl : Math.max(0, tl - 1)));
     }, 1000);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [mode, testText, snap?.startedAt, snap?.finished, snap]);
+  }, [mode, testText, hasStarted, isFinished]);
 
   useEffect(() => {
     if (mode !== "time" || testText || metrics) return;
@@ -114,10 +119,17 @@ export function TestScreen({ testText }: { testText?: string }) {
   useEffect(() => {
     function onKey(ev: KeyboardEvent) {
       // quick restart (works even from the results screen)
-      if (
-        (quickRestart === "tab" && ev.key === "Tab") ||
-        (quickRestart === "esc" && ev.key === "Escape")
-      ) {
+      if (quickRestart === "tab" && ev.key === "Tab") {
+        // don't hijack Tab when focus is on interactive chrome (nav, config, buttons)
+        const ae = document.activeElement as HTMLElement | null;
+        const onControl =
+          !!ae && ae !== document.body && /^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(ae.tagName);
+        if (onControl) return;
+        ev.preventDefault();
+        start();
+        return;
+      }
+      if (quickRestart === "esc" && ev.key === "Escape") {
         ev.preventDefault();
         start();
         return;

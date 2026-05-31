@@ -7,9 +7,10 @@ type SliderProps = {
   step?: number;
   onChange: (v: number) => void;
   id?: string;
+  ariaLabel?: string;
 };
 
-export function Slider({ value, min, max, step, onChange, id }: SliderProps) {
+export function Slider({ value, min, max, step, onChange, id, ariaLabel }: SliderProps) {
   const range = max - min;
   const fraction = range > 0 ? (value - min) / range : 0;
   const percent = Math.min(100, Math.max(0, fraction * 100));
@@ -19,6 +20,7 @@ export function Slider({ value, min, max, step, onChange, id }: SliderProps) {
       id={id}
       type="range"
       data-testid="slider"
+      aria-label={ariaLabel}
       min={min}
       max={max}
       step={step}

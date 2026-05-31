@@ -98,19 +98,7 @@ export function ThemeEditor({
           </select>
         </label>
 
-        <label style={lbl}>
-          Caret
-          <select
-            aria-label="caret"
-            value={draft.caretStyle}
-            onChange={(e) => setDraft((d) => ({ ...d, caretStyle: e.target.value as Theme["caretStyle"] }))}
-            className="tt-input"
-          >
-            <option value="line">Line</option>
-            <option value="block">Block</option>
-            <option value="underline">Underline</option>
-          </select>
-        </label>
+        {/* Caret style is a global setting (Settings → Appearance), not per-theme. */}
 
         <label style={lbl}>
           Background image
