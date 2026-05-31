@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateDrill, charsForCodes } from "@/lib/curriculum/drills";
+import { generateDrill, charsForCodes, isCombiningThai } from "@/lib/curriculum/drills";
 import { kedmanee } from "@/lib/layouts/kedmanee";
 
 describe("charsForCodes", () => {
@@ -26,6 +26,19 @@ describe("generateDrill", () => {
     const a = generateDrill({ codes: ["KeyD", "KeyF", "KeyG"], layout: kedmanee, groups: 6, rng: seeded(1) });
     const b = generateDrill({ codes: ["KeyD", "KeyF", "KeyG"], layout: kedmanee, groups: 6, rng: seeded(1) });
     expect(a).toBe(b);
+  });
+  it("never emits a combining mark in isolation or stacked", () => {
+    // KeyH=้ (tone mark), KeyL=ส, KeyK=า — a set that mixes a combining mark with bases
+    const out = generateDrill({ codes: ["KeyH", "KeyL", "KeyK"], layout: kedmanee, groups: 40, rng: Math.random });
+    for (const chunk of out.split(" ")) {
+      const arr = Array.from(chunk);
+      expect(isCombiningThai(arr[0])).toBe(false); // a chunk never starts with a mark
+      for (let i = 1; i < arr.length; i++) {
+        if (isCombiningThai(arr[i])) {
+          expect(isCombiningThai(arr[i - 1])).toBe(false); // a mark follows a base, never another mark
+        }
+      }
+    }
   });
 });
 
