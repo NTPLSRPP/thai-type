@@ -29,9 +29,11 @@ export function Words({
   // horizontal space (letter-spacing or a left border) before a mark detaches it. The
   // caret is drawn with box-shadow so it never adds layout width.
   return (
-    <div style={{ fontSize, lineHeight: 2, fontFamily }}>
+    <div style={{ fontSize, lineHeight: 2, fontFamily, overflowWrap: "break-word" }}>
       {groups.map((g, gi) => (
-        <span key={gi} data-testid="cluster" style={{ whiteSpace: "pre" }}>
+        // inline-block = atomic cluster: wraps BETWEEN clusters (no overflow), never breaks
+        // a base consonant from its combining marks; whiteSpace:pre keeps the space cluster's width.
+        <span key={gi} data-testid="cluster" style={{ display: "inline-block", whiteSpace: "pre" }}>
           {g.cells.map((c, k) => {
             const idx = g.indices[k];
             const isCursor = idx === cursor;
