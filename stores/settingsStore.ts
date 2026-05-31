@@ -18,11 +18,12 @@ type SettingsState = Settings & SettingsActions;
 
 // Persist only the Settings fields (never the action functions).
 function snapshot(s: Settings): Settings {
-  const out = {} as Settings;
-  for (const key of Object.keys(DEFAULT_SETTINGS) as (keyof Settings)[]) {
-    (out as Record<string, unknown>)[key] = (s as Record<string, unknown>)[key];
+  const src = s as unknown as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const key of Object.keys(DEFAULT_SETTINGS)) {
+    out[key] = src[key];
   }
-  return out;
+  return out as unknown as Settings;
 }
 
 // Seed with deterministic defaults so the first client render matches the SSR HTML.
