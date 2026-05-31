@@ -1,6 +1,16 @@
 import type { Metrics } from "@/lib/engine/metrics";
+import type { WpmPoint } from "@/lib/stats/types";
+import { WpmGraph } from "./WpmGraph";
 
-export function Results({ metrics, onRestart }: { metrics: Metrics; onRestart: () => void }) {
+export function Results({
+  metrics,
+  onRestart,
+  series = [],
+}: {
+  metrics: Metrics;
+  onRestart: () => void;
+  series?: WpmPoint[];
+}) {
   const Stat = ({ label, value }: { label: string; value: string }) => (
     <div style={{ textAlign: "center" }}>
       <div style={{ fontSize: 40, color: "var(--accent)" }}>{value}</div>
@@ -15,6 +25,11 @@ export function Results({ metrics, onRestart }: { metrics: Metrics; onRestart: (
         <Stat label="consistency" value={`${metrics.consistency}%`} />
         <Stat label="raw" value={`${metrics.rawWpm}`} />
       </div>
+      {series.length > 0 && (
+        <div style={{ margin: "8px 0 24px" }}>
+          <WpmGraph points={series} />
+        </div>
+      )}
       <button
         onClick={onRestart}
         style={{

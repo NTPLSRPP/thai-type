@@ -12,6 +12,9 @@ export function NavBar() {
       <Link href="/themes" style={{ color: "var(--text)", textDecoration: "none" }}>
         themes
       </Link>
+      <Link href="/stats" style={{ color: "var(--text)", textDecoration: "none" }}>
+        stats
+      </Link>
     </nav>
   );
 }
