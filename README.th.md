@@ -22,7 +22,7 @@
 
 ## ภาพหน้าจอ
 
-| บทเรียน | ธีม |
+| บทเรียน | ทดสอบ |
 |---|---|
 | [![บทเรียน](docs/screenshots/lessons.png)](docs/screenshots/lessons.png) | [![ธีม](docs/screenshots/theme-chisa.png)](docs/screenshots/theme-chisa.png) |
 
