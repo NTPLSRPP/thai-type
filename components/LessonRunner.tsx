@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSettings } from "@/stores/settingsStore";
 import { useProgress } from "@/stores/progressStore";
 import { useKeyModel } from "@/stores/keyModelStore";
+import { useTheme } from "@/stores/themeStore";
 import { getLayout } from "@/lib/layouts/registry";
 import { getUnit, nextUnitId } from "@/lib/curriculum/units";
 import { generateDrill, charsForCodes } from "@/lib/curriculum/drills";
@@ -27,6 +28,7 @@ export function LessonRunner({ unitId, drillText }: LessonRunnerProps) {
   const complete = useProgress((s) => s.complete);
   const recordModel = useKeyModel((s) => s.record);
   const model = useKeyModel((s) => s.model);
+  const caretStyle = useTheme((s) => s.activeTheme()?.caretStyle ?? "line");
   const unit = getUnit(unitId);
 
   const [target, setTarget] = useState("");
@@ -110,7 +112,7 @@ export function LessonRunner({ unitId, drillText }: LessonRunnerProps) {
     <div>
       <h2 style={{ color: "var(--text-typed)", fontSize: 18 }}>{unit.name}</h2>
       <div style={{ marginTop: 24 }}>
-        {snap && <Words cells={snap.cells} cursor={snap.cursor} text={target} />}
+        {snap && <Words cells={snap.cells} cursor={snap.cursor} text={target} caretStyle={caretStyle} />}
       </div>
       <Keyboard layout={layout} nextChar={nextChar} errorCounts={errorCounts} />
     </div>

@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useSettings } from "@/stores/settingsStore";
 import { useKeyModel } from "@/stores/keyModelStore";
+import { useTheme } from "@/stores/themeStore";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
 import { computeMetrics, type Metrics } from "@/lib/engine/metrics";
 import { errorCountsByChar } from "@/lib/engine/keyStats";
@@ -37,6 +38,7 @@ export function TestScreen({ testText }: { testText?: string }) {
   const { mode, duration, wordCount, layoutId, inputMode } = useSettings();
   const layout = getLayout(layoutId);
   const recordModel = useKeyModel((s) => s.record);
+  const caretStyle = useTheme((s) => s.activeTheme()?.caretStyle ?? "line");
   const [target, setTarget] = useState(testText ?? "");
   const [snap, setSnap] = useState<EngineSnapshot | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
@@ -161,7 +163,7 @@ export function TestScreen({ testText }: { testText?: string }) {
       )}
       <StatsBar wpm={liveWpm} accuracy={liveAcc} timeLeft={timeLeft} />
       <div style={{ marginTop: 24 }}>
-        {snap && <Words cells={snap.cells} cursor={snap.cursor} text={target} />}
+        {snap && <Words cells={snap.cells} cursor={snap.cursor} text={target} caretStyle={caretStyle} />}
       </div>
       <Keyboard
         layout={layout}

@@ -9,6 +9,9 @@ export function NavBar() {
       <Link href="/lessons" style={{ color: "var(--text)", textDecoration: "none" }}>
         lessons
       </Link>
+      <Link href="/themes" style={{ color: "var(--text)", textDecoration: "none" }}>
+        themes
+      </Link>
     </nav>
   );
 }

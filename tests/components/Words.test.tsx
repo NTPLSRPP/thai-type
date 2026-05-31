@@ -22,4 +22,14 @@ describe("Words", () => {
     expect(screen.getAllByTestId("char")).toHaveLength(3);
     expect(screen.getAllByTestId("cluster")).toHaveLength(2);
   });
+  it("renders a block caret at the cursor when caretStyle=block", () => {
+    const cells = buildCells("กา");
+    render(<Words cells={cells} cursor={0} text="กา" caretStyle="block" />);
+    expect(screen.getAllByTestId("char")[0].dataset.caret).toBe("block");
+  });
+  it("defaults to line caret", () => {
+    const cells = buildCells("กา");
+    render(<Words cells={cells} cursor={0} text="กา" />);
+    expect(screen.getAllByTestId("char")[0].dataset.caret).toBe("line");
+  });
 });
