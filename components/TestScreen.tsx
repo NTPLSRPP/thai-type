@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useSettings } from "@/stores/settingsStore";
+import { useKeyModel } from "@/stores/keyModelStore";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
 import { computeMetrics, type Metrics } from "@/lib/engine/metrics";
 import { errorCountsByChar } from "@/lib/engine/keyStats";
@@ -35,6 +36,7 @@ const CONTROL_KEYS = new Set([
 export function TestScreen({ testText }: { testText?: string }) {
   const { mode, duration, wordCount, layoutId, inputMode } = useSettings();
   const layout = getLayout(layoutId);
+  const recordModel = useKeyModel((s) => s.record);
   const [target, setTarget] = useState(testText ?? "");
   const [snap, setSnap] = useState<EngineSnapshot | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
@@ -67,6 +69,7 @@ export function TestScreen({ testText }: { testText?: string }) {
     e.finish();
     const s = e.snapshot();
     setSnap(s);
+    recordModel(s.keystrokes);
     setMetrics(
       computeMetrics(
         s.keystrokes,
@@ -78,7 +81,7 @@ export function TestScreen({ testText }: { testText?: string }) {
       ),
     );
     if (timerRef.current) clearInterval(timerRef.current);
-  }, [mode, duration, testText]);
+  }, [mode, duration, testText, recordModel]);
 
   useEffect(() => {
     if (mode !== "time" || testText || !snap || snap.finished) return;
@@ -116,13 +119,14 @@ export function TestScreen({ testText }: { testText?: string }) {
       const s = e.snapshot();
       setSnap(s);
       if (s.finished) {
+        recordModel(s.keystrokes);
         const elapsed = s.keystrokes.length ? s.keystrokes[s.keystrokes.length - 1].t : 0;
         setMetrics(computeMetrics(s.keystrokes, elapsed));
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [metrics, inputMode, layout]);
+  }, [metrics, inputMode, layout, recordModel]);
 
   const liveWpm = useMemo(() => {
     if (!snap || !snap.startedAt) return 0;
