@@ -2,9 +2,10 @@ import { describe, it, expect } from "vitest";
 import { buildCells, applyInput } from "@/lib/engine/compare";
 
 describe("buildCells", () => {
-  it("creates one cell per grapheme cluster", () => {
+  it("creates one cell per code point (not per cluster)", () => {
+    // ก้า = ก, ้, า -> three cells
     const cells = buildCells("ก้า");
-    expect(cells.map((c) => c.target)).toEqual(["ก้", "า"]);
+    expect(cells.map((c) => c.target)).toEqual(["ก", "้", "า"]);
     expect(cells.every((c) => c.state === "untyped")).toBe(true);
   });
 });
