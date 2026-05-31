@@ -44,6 +44,17 @@ describe("createEngine", () => {
     e.back();
     expect(e.snapshot().cursor).toBe(0);
   });
+  it("press with advanceOnError=false records errors but does not advance until correct", () => {
+    let now = 0;
+    const e = createEngine("กา", () => now);
+    now = 1000; e.press("ข", false); // wrong, must not advance
+    expect(e.snapshot().cursor).toBe(0);
+    expect(e.snapshot().cells[0].state).toBe("untyped");
+    now = 2000; e.press("ก", false); // correct, advances
+    expect(e.snapshot().cursor).toBe(1);
+    expect(e.snapshot().keystrokes).toHaveLength(2); // both recorded for accuracy
+    expect(e.snapshot().keystrokes[0].correct).toBe(false);
+  });
   it("back() keeps the keystroke history (errors still counted) and allows retype", () => {
     let now = 0;
     const e = createEngine("ก", () => now);

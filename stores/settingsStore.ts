@@ -3,33 +3,56 @@ import { loadSettings, saveSettings, DEFAULT_SETTINGS } from "@/lib/storage/stor
 import type { Settings, TestMode, InputMode } from "@/lib/storage/schema";
 import type { LayoutId } from "@/lib/layouts/registry";
 
-interface SettingsState extends Settings {
+interface SettingsActions {
+  update(patch: Partial<Settings>): void;
+  reset(): void;
+  reload(): void;
   setMode(m: TestMode): void;
   setDuration(s: number): void;
   setWordCount(n: number): void;
   setLayout(id: LayoutId): void;
   setInputMode(m: InputMode): void;
-  reload(): void;
+}
+
+type SettingsState = Settings & SettingsActions;
+
+// Persist only the Settings fields (never the action functions).
+function snapshot(s: Settings): Settings {
+  const out = {} as Settings;
+  for (const key of Object.keys(DEFAULT_SETTINGS) as (keyof Settings)[]) {
+    (out as Record<string, unknown>)[key] = (s as Record<string, unknown>)[key];
+  }
+  return out;
 }
 
 // Seed with deterministic defaults so the first client render matches the SSR HTML.
-// ThemeProvider calls reload() on mount to hydrate persisted settings (layout, mode, etc.).
+// ThemeProvider calls reload() on mount to hydrate persisted settings.
 export const useSettings = create<SettingsState>((set, get) => ({
   ...DEFAULT_SETTINGS,
-  setMode(m) { set({ mode: m }); saveSettings(snapshot(get())); },
-  setDuration(s) { set({ duration: s }); saveSettings(snapshot(get())); },
-  setWordCount(n) { set({ wordCount: n }); saveSettings(snapshot(get())); },
-  setLayout(id) { set({ layoutId: id }); saveSettings(snapshot(get())); },
-  setInputMode(m) { set({ inputMode: m }); saveSettings(snapshot(get())); },
-  reload() { set({ ...loadSettings() }); },
+  update(patch) {
+    set(patch);
+    saveSettings(snapshot(get()));
+  },
+  reset() {
+    set({ ...DEFAULT_SETTINGS });
+    saveSettings(DEFAULT_SETTINGS);
+  },
+  reload() {
+    set({ ...loadSettings() });
+  },
+  setMode(m) {
+    get().update({ mode: m });
+  },
+  setDuration(s) {
+    get().update({ duration: s });
+  },
+  setWordCount(n) {
+    get().update({ wordCount: n });
+  },
+  setLayout(id) {
+    get().update({ layoutId: id });
+  },
+  setInputMode(m) {
+    get().update({ inputMode: m });
+  },
 }));
-
-function snapshot(s: Settings): Settings {
-  return {
-    mode: s.mode,
-    duration: s.duration,
-    wordCount: s.wordCount,
-    inputMode: s.inputMode,
-    layoutId: s.layoutId,
-  };
-}

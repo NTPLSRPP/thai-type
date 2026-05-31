@@ -9,7 +9,11 @@ export function loadSettings(): Settings {
   if (!raw) return DEFAULT_SETTINGS;
   try {
     const parsed = JSON.parse(raw) as { v: number; data: Partial<Settings> };
-    if (parsed.v !== SCHEMA_VERSION) return DEFAULT_SETTINGS;
+    // Forward-compatible: accept any known version <= current and merge defaults for
+    // missing fields (v1 -> v2 migration just fills the new settings with defaults).
+    if (typeof parsed.v !== "number" || parsed.v > SCHEMA_VERSION || typeof parsed.data !== "object" || parsed.data === null) {
+      return DEFAULT_SETTINGS;
+    }
     return { ...DEFAULT_SETTINGS, ...parsed.data };
   } catch {
     return DEFAULT_SETTINGS;
