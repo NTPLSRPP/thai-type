@@ -137,7 +137,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
               practice again
             </button>
             {next && (
-              <Link href={`/lessons/${next}`} className="tt-btn" style={{ textDecoration: "none" }}>
+              <Link href={`/lessons/${next}`} className="tt-btn tt-btn-primary" style={{ textDecoration: "none" }}>
                 next lesson →
               </Link>
             )}
@@ -151,7 +151,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
         </div>
       ) : (
         <>
-          <div style={{ marginTop: "var(--space-6)" }}>
+          <div className="tt-stage" style={{ marginTop: "var(--space-6)" }}>
             {snap && (
               <Words
                 cells={snap.cells}
@@ -170,6 +170,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
               layout={layout}
               nextChar={nextChar}
               errorCounts={errorCounts}
+              size={settings.keyboardSize}
               showShiftLegend={settings.showShiftLegend}
               fingerColors={settings.fingerColors}
               nextKeyHint={settings.nextKeyHint}

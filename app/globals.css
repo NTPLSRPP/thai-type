@@ -35,6 +35,11 @@
   /* readable secondary text (between dim --text and --text-typed) — adapts per theme */
   --text-muted: color-mix(in oklab, var(--text-typed) 62%, var(--bg));
 
+  /* elevation */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.22);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --glow: 0 0 24px color-mix(in oklab, var(--accent) 45%, transparent);
+
   /* page width presets */
   --page-narrow: 720px;
   --page-normal: 960px;
@@ -43,11 +48,17 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  background: var(--bg);
   color: var(--text);
   font-family: var(--ui-font);
   -webkit-font-smoothing: antialiased;
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  min-height: 100dvh;
+  /* atmosphere: base + a soft accent glow top-center + a deepening vignette */
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(120% 60% at 50% -10%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 60%),
+    radial-gradient(100% 80% at 50% 120%, color-mix(in oklab, var(--text) 8%, transparent), transparent 70%);
+  background-attachment: fixed;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -134,3 +145,52 @@ body {
 .sublesson-cell { transition: border-color 120ms, transform 120ms; }
 .sublesson-cell:hover { border-color: var(--accent); transform: translateY(-1px); }
 .sublesson-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---- design layer: depth + hierarchy ---- */
+
+/* elevated surface card */
+.tt-card {
+  background: linear-gradient(180deg, var(--surface), color-mix(in oklab, var(--surface) 50%, var(--bg)));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: var(--space-6);
+}
+
+/* section title with an accent bar */
+.tt-section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-4);
+}
+.tt-section-title::before {
+  content: "";
+  width: 3px;
+  height: 1em;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: var(--glow);
+}
+
+/* filled primary button */
+.tt-btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.tt-btn-primary:hover { opacity: 0.9; box-shadow: var(--glow); }
+
+/* the typing surface frame on the test/lesson screens */
+.tt-stage {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--text) 5%, var(--bg)), var(--bg));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8) var(--space-6);
+}

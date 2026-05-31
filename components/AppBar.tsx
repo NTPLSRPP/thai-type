@@ -23,7 +23,9 @@ export function AppBar() {
         alignItems: "center",
         justifyContent: "space-between",
         gap: "var(--space-6)",
-        marginBottom: "var(--space-12)",
+        paddingBottom: "var(--space-4)",
+        marginBottom: "var(--space-8)",
+        borderBottom: "1px solid var(--hairline)",
       }}
     >
       <Link href="/" aria-label="thai-type home" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: 2 }}>

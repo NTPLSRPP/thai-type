@@ -10,18 +10,12 @@ import { Keyboard } from "./Keyboard";
 import { StatCard } from "./StatCard";
 import type { WpmPoint } from "@/lib/stats/types";
 
-const heading: React.CSSProperties = {
-  fontSize: 12,
-  textTransform: "uppercase",
-  letterSpacing: 2,
-  color: "var(--text-typed)",
-};
-
 export function StatsDashboard() {
   const sessions = useStats((s) => s.sessions);
   const clear = useStats((s) => s.clear);
   const model = useKeyModel((s) => s.model);
   const layoutId = useSettings((s) => s.layoutId);
+  const keyboardSize = useSettings((s) => s.keyboardSize);
   const layout = getLayout(layoutId);
   const [confirming, setConfirming] = useState(false);
 
@@ -53,11 +47,11 @@ export function StatsDashboard() {
         <StatCard testId="agg-totalTests" label="tests" value={`${agg.totalTests}`} valueSize={32} labelSize={12} />
       </div>
 
-      <h2 style={heading}>wpm trend</h2>
+      <h2 className="tt-section-title">wpm trend</h2>
       <WpmGraph points={trend} xLabel="test #" />
 
-      <h2 style={{ ...heading, marginTop: 24 }}>error heatmap</h2>
-      <Keyboard layout={layout} nextChar={null} errorCounts={errorCounts} />
+      <h2 className="tt-section-title" style={{ marginTop: "var(--space-6)" }}>error heatmap</h2>
+      <Keyboard layout={layout} nextChar={null} errorCounts={errorCounts} size={keyboardSize} />
 
       <div style={{ marginTop: 24 }}>
         {confirming ? (

@@ -11,6 +11,7 @@ export type CaretStyle = "off" | "line" | "block" | "underline";
 export type PageWidth = "narrow" | "normal" | "wide";
 export type TimerStyle = "text" | "bar";
 export type QuickRestart = "off" | "tab" | "esc";
+export type KeyboardSize = "small" | "medium" | "large";
 
 export interface Settings {
   // test
@@ -38,6 +39,7 @@ export interface Settings {
 
   // on-screen keyboard
   showKeyboard: boolean;
+  keyboardSize: KeyboardSize;
   showShiftLegend: boolean;
   fingerColors: boolean;
   nextKeyHint: boolean;
@@ -73,6 +75,7 @@ export const DEFAULT_SETTINGS: Settings = {
   timerStyle: "text",
 
   showKeyboard: true,
+  keyboardSize: "medium",
   showShiftLegend: true,
   fingerColors: true,
   nextKeyHint: true,

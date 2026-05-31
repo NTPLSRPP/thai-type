@@ -195,6 +195,7 @@ export function TestScreen({ testText }: { testText?: string }) {
       layout={layout}
       nextChar={inputMode === "app-remap" ? nextChar : null}
       errorCounts={errorCounts}
+      size={s.keyboardSize}
       showShiftLegend={s.showShiftLegend}
       fingerColors={s.fingerColors}
       nextKeyHint={s.nextKeyHint}
@@ -214,28 +215,30 @@ export function TestScreen({ testText }: { testText?: string }) {
   return (
     <div>
       {!testText && <ConfigBar />}
-      <StatsBar
-        wpm={liveWpm}
-        accuracy={liveAcc}
-        timeLeft={timeLeft}
-        showWpm={s.liveSpeed}
-        showAcc={s.liveAccuracy}
-        timerStyle={s.timerStyle}
-        duration={duration}
-      />
-      <div style={{ marginTop: "var(--space-6)" }}>
-        {snap && (
-          <Words
-            cells={snap.cells}
-            cursor={snap.cursor}
-            text={target}
-            caretStyle={s.caretStyle}
-            smoothCaret={s.smoothCaret}
-            blind={s.blindMode}
-            fontSize={s.fontSize}
-            fontFamily={s.typingFont}
-          />
-        )}
+      <div className="tt-stage">
+        <StatsBar
+          wpm={liveWpm}
+          accuracy={liveAcc}
+          timeLeft={timeLeft}
+          showWpm={s.liveSpeed}
+          showAcc={s.liveAccuracy}
+          timerStyle={s.timerStyle}
+          duration={duration}
+        />
+        <div style={{ marginTop: "var(--space-6)" }}>
+          {snap && (
+            <Words
+              cells={snap.cells}
+              cursor={snap.cursor}
+              text={target}
+              caretStyle={s.caretStyle}
+              smoothCaret={s.smoothCaret}
+              blind={s.blindMode}
+              fontSize={s.fontSize}
+              fontFamily={s.typingFont}
+            />
+          )}
+        </div>
       </div>
       {keyboard}
     </div>

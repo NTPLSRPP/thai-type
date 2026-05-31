@@ -25,16 +25,7 @@ export function Results({
           <WpmGraph points={series} />
         </div>
       )}
-      <button
-        onClick={onRestart}
-        style={{
-          background: "transparent",
-          color: "var(--text)",
-          border: "1px solid var(--text)",
-          padding: "8px 16px",
-          cursor: "pointer",
-        }}
-      >
+      <button onClick={onRestart} className="tt-btn tt-btn-primary">
         next test
       </button>
     </div>

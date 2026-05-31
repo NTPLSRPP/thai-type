@@ -186,6 +186,18 @@ export function SettingsPanel({ mounted }: SettingsPanelProps) {
         <SettingRow title="show keyboard" description="display the on-screen keyboard">
           <Toggle ariaLabel="show keyboard" checked={s.showKeyboard} onChange={(v) => update({ showKeyboard: v })} />
         </SettingRow>
+        <SettingRow title="keyboard size" description="size of the on-screen keys">
+          <Segmented
+            ariaLabel="keyboard size"
+            value={s.keyboardSize}
+            options={[
+              { value: "small", label: "small" },
+              { value: "medium", label: "medium" },
+              { value: "large", label: "large" },
+            ]}
+            onChange={(v) => update({ keyboardSize: v })}
+          />
+        </SettingRow>
         <SettingRow title="shift legend" description="show shifted characters on each key">
           <Toggle ariaLabel="shift legend" checked={s.showShiftLegend} onChange={(v) => update({ showShiftLegend: v })} />
         </SettingRow>
