@@ -1,18 +1,8 @@
 import { KEYBOARD_ROWS } from "@/lib/layouts/geometry";
 import { findKeyForChar } from "@/lib/layouts/reverse";
+import { FINGER_COLOR } from "@/lib/layouts/fingers";
 import type { Layout } from "@/lib/layouts/types";
 import type { KeyboardSize } from "@/lib/storage/schema";
-
-const FINGER_COLOR: Record<string, string> = {
-  "left-pinky": "#5b8def",
-  "left-ring": "#43b581",
-  "left-middle": "#e2b714",
-  "left-index": "#e67e22",
-  "right-index": "#e74c3c",
-  "right-middle": "#9b59b6",
-  "right-ring": "#1abc9c",
-  "right-pinky": "#3498db",
-};
 
 interface SizeSpec {
   key: number; // key width/height base (square-ish)

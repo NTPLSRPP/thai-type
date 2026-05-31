@@ -44,6 +44,7 @@ export interface Settings {
   fingerColors: boolean;
   nextKeyHint: boolean;
   heatmap: boolean;
+  showHands: boolean; // hand/finger guide for the next key
 
   // sound
   clickSound: boolean;
@@ -80,6 +81,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fingerColors: true,
   nextKeyHint: true,
   heatmap: true,
+  showHands: true,
 
   clickSound: false,
   errorSound: false,
