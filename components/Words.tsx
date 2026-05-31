@@ -24,10 +24,14 @@ export function Words({
   fontFamily,
 }: WordsProps) {
   const groups = groupClusters(cells, text);
+  // NOTE: no letter-spacing and no layout-affecting borders on the character spans.
+  // Thai combining vowels/tone marks must shape onto their base consonant; any inserted
+  // horizontal space (letter-spacing or a left border) before a mark detaches it. The
+  // caret is drawn with box-shadow so it never adds layout width.
   return (
-    <div style={{ fontSize, lineHeight: 1.8, letterSpacing: 1, fontFamily }}>
+    <div style={{ fontSize, lineHeight: 2, fontFamily }}>
       {groups.map((g, gi) => (
-        <span key={gi} data-testid="cluster" style={{ display: "inline-block", whiteSpace: "pre" }}>
+        <span key={gi} data-testid="cluster" style={{ whiteSpace: "pre" }}>
           {g.cells.map((c, k) => {
             const idx = g.indices[k];
             const isCursor = idx === cursor;
@@ -40,21 +44,20 @@ export function Words({
                   : "var(--text)";
             const style: React.CSSProperties = {
               color: baseColor,
-              borderLeft: "2px solid transparent",
               transition: smoothCaret
-                ? "background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease)"
+                ? "color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease)"
                 : undefined,
             };
             const showCaret = isCursor && caretStyle !== "off";
-            if (showCaret && caretStyle === "line") style.borderLeft = "2px solid var(--caret)";
-            if (showCaret && caretStyle === "underline") style.borderBottom = "2px solid var(--caret)";
+            if (showCaret && caretStyle === "line") style.boxShadow = "inset 2px 0 0 0 var(--caret)";
+            if (showCaret && caretStyle === "underline") style.boxShadow = "inset 0 -2px 0 0 var(--caret)";
             if (showCaret && caretStyle === "block") {
               style.background = "var(--caret)";
               style.color = "var(--bg)";
             }
             // caret "off" keeps a faint cue so the cursor is never lost (esp. with blind mode).
             if (isCursor && caretStyle === "off") {
-              style.borderBottom = "2px solid color-mix(in oklab, var(--caret) 30%, transparent)";
+              style.boxShadow = "inset 0 -2px 0 0 color-mix(in oklab, var(--caret) 30%, transparent)";
             }
             return (
               <span
