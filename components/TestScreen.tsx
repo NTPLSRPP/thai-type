@@ -251,8 +251,12 @@ export function TestScreen({ testText }: { testText?: string }) {
           )}
         </div>
       </div>
-      {keyboard}
-      {s.showHands && <Hands activeFinger={activeFinger} />}
+      {(s.showKeyboard || s.showHands) && (
+        <div style={{ position: "relative" }}>
+          {keyboard}
+          {s.showHands && <Hands activeFinger={activeFinger} overlay={s.showKeyboard} />}
+        </div>
+      )}
     </div>
   );
 }

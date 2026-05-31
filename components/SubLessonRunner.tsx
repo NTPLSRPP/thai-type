@@ -175,19 +175,23 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
               />
             )}
           </div>
-          {settings.showKeyboard && (
-            <Keyboard
-              layout={layout}
-              nextChar={nextChar}
-              errorCounts={errorCounts}
-              size={settings.keyboardSize}
-              showShiftLegend={settings.showShiftLegend}
-              fingerColors={settings.fingerColors}
-              nextKeyHint={settings.nextKeyHint}
-              heatmap={settings.heatmap}
-            />
+          {(settings.showKeyboard || settings.showHands) && (
+            <div style={{ position: "relative" }}>
+              {settings.showKeyboard && (
+                <Keyboard
+                  layout={layout}
+                  nextChar={nextChar}
+                  errorCounts={errorCounts}
+                  size={settings.keyboardSize}
+                  showShiftLegend={settings.showShiftLegend}
+                  fingerColors={settings.fingerColors}
+                  nextKeyHint={settings.nextKeyHint}
+                  heatmap={settings.heatmap}
+                />
+              )}
+              {settings.showHands && <Hands activeFinger={activeFinger} overlay={settings.showKeyboard} />}
+            </div>
           )}
-          {settings.showHands && <Hands activeFinger={activeFinger} />}
         </>
       )}
     </div>
