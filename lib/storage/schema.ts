@@ -1,12 +1,16 @@
+import type { LayoutId } from "@/lib/layouts/registry";
+
 export const SCHEMA_VERSION = 1;
 
 export type TestMode = "time" | "words";
+export type InputMode = "app-remap" | "os-native";
+
 export interface Settings {
   mode: TestMode;
-  duration: number;   // seconds, for time mode
-  wordCount: number;  // for words mode
-  inputMode: "app-remap" | "os-native";
-  layoutId: "kedmanee";
+  duration: number;
+  wordCount: number;
+  inputMode: InputMode;
+  layoutId: LayoutId;
 }
 
 export const DEFAULT_SETTINGS: Settings = {

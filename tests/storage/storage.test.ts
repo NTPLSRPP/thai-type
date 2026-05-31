@@ -20,4 +20,9 @@ describe("settings storage", () => {
     localStorage.setItem("thaitype:settings", JSON.stringify({ v: 999, data: {} }));
     expect(loadSettings()).toEqual(DEFAULT_SETTINGS);
   });
+  it("round-trips layout + input mode", () => {
+    const next = { ...DEFAULT_SETTINGS, layoutId: "manoonchai" as const, inputMode: "os-native" as const };
+    saveSettings(next);
+    expect(loadSettings()).toEqual(next);
+  });
 });
