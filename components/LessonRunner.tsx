@@ -63,6 +63,12 @@ export function LessonRunner({ unitId, drillText }: LessonRunnerProps) {
     function onKey(ev: KeyboardEvent) {
       const e = engineRef.current;
       if (!e || done) return;
+      if (ev.code === "Backspace" || ev.key === "Backspace") {
+        ev.preventDefault();
+        e.back();
+        setSnap(e.snapshot());
+        return;
+      }
       const ch = resolveKey(layout, ev.code, ev.shiftKey);
       if (ch === null) return;
       ev.preventDefault();

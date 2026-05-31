@@ -17,4 +17,10 @@ describe("Keyboard", () => {
     render(<Keyboard layout={kedmanee} nextChar={null} errorCounts={new Map()} />);
     expect(screen.getByTestId("key-KeyD").dataset.next).toBe("false");
   });
+  it("shows both the normal and shift character on a key", () => {
+    render(<Keyboard layout={kedmanee} nextChar={null} errorCounts={new Map()} />);
+    const keyL = screen.getByTestId("key-KeyL"); // kedmanee KeyL: ส / ศ
+    expect(keyL.textContent).toContain("ส");
+    expect(keyL.textContent).toContain("ศ");
+  });
 });

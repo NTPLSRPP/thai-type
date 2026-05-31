@@ -132,6 +132,12 @@ export function TestScreen({ testText }: { testText?: string }) {
     function onKey(ev: KeyboardEvent) {
       const e = engineRef.current;
       if (!e || metrics) return;
+      if (ev.code === "Backspace" || ev.key === "Backspace") {
+        ev.preventDefault();
+        e.back();
+        setSnap(e.snapshot());
+        return;
+      }
       let char: string | null;
       if (inputMode === "os-native") {
         // OS already produced the Thai character; accept printable single graphemes only.
