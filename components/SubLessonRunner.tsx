@@ -8,8 +8,6 @@ import { useLessonProgress } from "@/stores/lessonProgressStore";
 import { getLayout } from "@/lib/layouts/registry";
 import { getSubLesson, nextSubLessonId, CHAPTERS, REPS_TO_COMPLETE } from "@/lib/curriculum/chapters";
 import { resolveKey } from "@/lib/layouts/resolve";
-import { findKeyForChar } from "@/lib/layouts/reverse";
-import type { HandFinger } from "@/lib/layouts/fingers";
 import { errorCountsByChar } from "@/lib/engine/keyStats";
 import { playClick, playError } from "@/lib/sound/sound";
 import { createEngine, type TypingEngine } from "@/lib/engine/engine";
@@ -116,13 +114,6 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
   // Session counter only — reps completed this sitting (not mixed with persisted total).
   const repInfo = done ? REPS_TO_COMPLETE : repsDone;
 
-  const nextKey = nextChar ? findKeyForChar(layout, nextChar) : null;
-  const activeFinger: HandFinger | null = nextKey
-    ? nextKey.code === "Space"
-      ? "thumb"
-      : (layout.keys[nextKey.code]?.finger ?? null)
-    : null;
-
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
@@ -184,8 +175,6 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
             nextKeyHint={settings.nextKeyHint}
             heatmap={settings.heatmap}
             showKeyboard={settings.showKeyboard}
-            showHands={settings.showHands}
-            activeFinger={activeFinger}
           />
         </>
       )}

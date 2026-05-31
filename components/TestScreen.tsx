@@ -8,9 +8,7 @@ import { computeMetrics, type Metrics } from "@/lib/engine/metrics";
 import { errorCountsByChar } from "@/lib/engine/keyStats";
 import { wpmSeries } from "@/lib/stats/wpmSeries";
 import { resolveKey } from "@/lib/layouts/resolve";
-import { findKeyForChar } from "@/lib/layouts/reverse";
 import { getLayout } from "@/lib/layouts/registry";
-import type { HandFinger } from "@/lib/layouts/fingers";
 import { generateWords } from "@/lib/text/generate";
 import { playClick, playError } from "@/lib/sound/sound";
 import type { EngineSnapshot } from "@/lib/engine/types";
@@ -19,13 +17,6 @@ import { StatsBar } from "./StatsBar";
 import { Results } from "./Results";
 import { ConfigBar } from "./ConfigBar";
 import { KeyboardWithHands } from "./KeyboardWithHands";
-
-function fingerForChar(layout: ReturnType<typeof getLayout>, ch: string | null): HandFinger | null {
-  if (!ch) return null;
-  const k = findKeyForChar(layout, ch);
-  if (!k) return null;
-  return k.code === "Space" ? "thumb" : (layout.keys[k.code]?.finger ?? null);
-}
 
 const CONTROL_KEYS = new Set([
   "Shift", "Backspace", "Enter", "Tab", "Alt", "Control", "Meta", "CapsLock",
@@ -198,7 +189,6 @@ export function TestScreen({ testText }: { testText?: string }) {
     [snap],
   );
   const series = useMemo(() => (snap ? wpmSeries(snap.keystrokes) : []), [snap]);
-  const activeFinger = fingerForChar(layout, nextChar);
 
   const kbProps = {
     layout,
@@ -215,7 +205,7 @@ export function TestScreen({ testText }: { testText?: string }) {
     return (
       <div>
         <Results metrics={metrics} onRestart={start} series={series} />
-        <KeyboardWithHands {...kbProps} nextChar={null} showHands={false} activeFinger={null} />
+        <KeyboardWithHands {...kbProps} nextChar={null} />
       </div>
     );
   }
@@ -251,8 +241,6 @@ export function TestScreen({ testText }: { testText?: string }) {
       <KeyboardWithHands
         {...kbProps}
         nextChar={inputMode === "app-remap" ? nextChar : null}
-        showHands={s.showHands}
-        activeFinger={activeFinger}
       />
     </div>
   );

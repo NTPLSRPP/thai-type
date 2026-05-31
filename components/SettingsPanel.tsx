@@ -210,9 +210,6 @@ export function SettingsPanel({ mounted }: SettingsPanelProps) {
         <SettingRow title="heatmap" description="shade keys by error frequency">
           <Toggle ariaLabel="heatmap" checked={s.heatmap} onChange={(v) => update({ heatmap: v })} />
         </SettingRow>
-        <SettingRow title="finger guide" description="show hands highlighting the finger for the next key">
-          <Toggle ariaLabel="finger guide" checked={s.showHands} onChange={(v) => update({ showHands: v })} />
-        </SettingRow>
       </SettingsSection>
 
       <SettingsSection title="sound">
