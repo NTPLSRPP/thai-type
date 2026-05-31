@@ -2,7 +2,9 @@
 
 A Thai touch-typing trainer in the spirit of Monkeytype — structured lessons, multiple keyboard layouts, live stats, and a deep set of customization and theming options. Built for learning the Thai keyboard from the home row up.
 
-> Live development app. Everything runs client-side; progress and settings persist in the browser (no backend, no account).
+**▶ Live demo: <https://ntplsrpp.github.io/thai-type/>**
+
+> Everything runs client-side; progress and settings persist in the browser (no backend, no account).
 
 ## Features
 
