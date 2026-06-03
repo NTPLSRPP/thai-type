@@ -55,6 +55,29 @@ describe("createEngine", () => {
     expect(e.snapshot().keystrokes).toHaveLength(2); // both recorded for accuracy
     expect(e.snapshot().keystrokes[0].correct).toBe(false);
   });
+  it("forceCorrection blocks all input after a mistype until back() clears it", () => {
+    let now = 0;
+    const e = createEngine("กา", () => now);
+    now = 1000; e.press("ข", true, true); // wrong: shown as incorrect, cursor advances
+    expect(e.snapshot().cursor).toBe(1);
+    expect(e.snapshot().cells[0].state).toBe("incorrect");
+    now = 2000; e.press("า", true, true); // blocked: must backspace first
+    expect(e.snapshot().cursor).toBe(1);
+    expect(e.snapshot().keystrokes).toHaveLength(1); // blocked press not recorded
+    e.back();
+    now = 3000; e.press("ก", true, true); // correction accepted
+    expect(e.snapshot().cursor).toBe(1);
+    expect(e.snapshot().cells[0].state).toBe("correct");
+  });
+  it("forceCorrection does not finish on a wrong final char", () => {
+    let now = 0;
+    const e = createEngine("ก", () => now);
+    now = 1000; e.press("ข", true, true); // wrong last char
+    expect(e.snapshot().finished).toBe(false);
+    e.back();
+    now = 2000; e.press("ก", true, true);
+    expect(e.snapshot().finished).toBe(true);
+  });
   it("back() keeps the keystroke history (errors still counted) and allows retype", () => {
     let now = 0;
     const e = createEngine("ก", () => now);

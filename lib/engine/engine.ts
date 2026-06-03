@@ -2,7 +2,7 @@ import { buildCells, applyInput } from "./compare";
 import type { EngineSnapshot } from "./types";
 
 export interface TypingEngine {
-  press(cluster: string, advanceOnError?: boolean): void;
+  press(cluster: string, advanceOnError?: boolean, forceCorrection?: boolean): void;
   back(): void;
   finish(): void;
   snapshot(): EngineSnapshot;
@@ -18,8 +18,11 @@ export function createEngine(target: string, clock: () => number = () => perform
   // advanceOnError=true (default): always advance (normal mode).
   // advanceOnError=false (stop-on-error "letter"): a wrong key is recorded as an error
   // but the cursor stays put until the correct character is typed.
-  function press(cluster: string, advanceOnError = true) {
+  // forceCorrection=true (lessons): a mistype is shown as incorrect and all further
+  // input is ignored until back() clears it — the user must backspace to fix.
+  function press(cluster: string, advanceOnError = true, forceCorrection = false) {
     if (finished || cursor >= cells.length) return;
+    if (forceCorrection && cursor > 0 && cells[cursor - 1].state === "incorrect") return;
     const t = clock();
     if (startedAt === null) startedAt = t;
     const expected = cells[cursor].target;
@@ -29,7 +32,9 @@ export function createEngine(target: string, clock: () => number = () => perform
       const res = applyInput(cells, cursor, cluster);
       cells = res.cells;
       cursor = res.cursor;
-      if (cursor >= cells.length) finished = true;
+      // A run can only finish clean in forceCorrection mode — a wrong final
+      // char leaves the run open so the user must backspace and fix it.
+      if (cursor >= cells.length) finished = !forceCorrection || cells.every((c) => c.state === "correct");
     }
   }
 

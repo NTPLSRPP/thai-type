@@ -77,7 +77,8 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
       if (!e) return;
       if (ev.code === "Backspace" || ev.key === "Backspace") {
         ev.preventDefault();
-        if (settings.noBackspace) return;
+        // noBackspace (confidence mode) is ignored in lessons: forced correction
+        // requires backspace, otherwise a mistype would deadlock the run.
         e.back();
         setSnap(e.snapshot());
         return;
@@ -85,9 +86,18 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
       const ch = resolveKey(layout, ev.code, ev.shiftKey);
       if (ch === null) return;
       ev.preventDefault();
-      e.press(ch, settings.stopOnError !== "letter");
+      // Lessons always force correction: a mistype must be backspaced before
+      // any further input is accepted.
+      const prevCount = e.snapshot().keystrokes.length;
+      e.press(ch, true, true);
       const s = e.snapshot();
       setSnap(s);
+      const blocked = s.keystrokes.length === prevCount;
+      if (blocked) {
+        // Input ignored until the mistype is backspaced — buzz as a reminder.
+        if (settings.errorSound) playError(settings.soundVolume);
+        return;
+      }
       const last = s.keystrokes[s.keystrokes.length - 1];
       if (settings.clickSound) playClick(settings.soundVolume);
       if (settings.errorSound && last && !last.correct) playError(settings.soundVolume);
@@ -103,7 +113,7 @@ export function SubLessonRunner({ id, textOverride }: SubLessonRunnerProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [
     done, layout, id, router, recordModel, recordRep, start,
-    settings.noBackspace, settings.stopOnError, settings.clickSound, settings.errorSound, settings.soundVolume,
+    settings.clickSound, settings.errorSound, settings.soundVolume,
   ]);
 
   const nextChar =
